@@ -1,140 +1,558 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blue Delivery - Sistem Kurir</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f6f9; }
-    .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    h2 { color: #0056b3; text-align: center; }
-    label { font-weight: bold; display: block; margin-top: 10px; }
-    input, select, button { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-    button { background-color: #0056b3; color: white; border: none; font-size: 16px; margin-top: 15px; cursor: pointer; }
-    button:hover { background-color: #003d80; }
-    .result { margin-top: 15px; padding: 10px; background: #e9ecef; border-radius: 4px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    th { background-color: #0056b3; color: white; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Boy Delivery</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f6f8fa;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Container Aplikasi Mobile */
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            background: #f6f8fa;
+            min-height: 100vh;
+            padding-bottom: 80px; /* Jarak untuk Bottom Nav */
+            position: relative;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        /* Header Aplikasi */
+        .top-header {
+            background-color: #27ae60;
+            color: white;
+            padding: 14px 16px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .content-padding {
+            padding: 12px 16px;
+        }
+
+        /* BANNER WARNING (BERANDA) */
+        .alert-banner {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: bold;
+            color: #333;
+            line-height: 1.4;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        /* FORM INPUT (BERANDA) */
+        .section-label {
+            font-size: 13px;
+            color: #444;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #dcdcdc;
+            font-size: 13px;
+            margin-bottom: 8px;
+            outline: none;
+            background: #fff;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-container input {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .row-2 {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-blue {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            font-weight: bold;
+            padding: 10px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: auto;
+            margin-top: 4px;
+            margin-bottom: 15px;
+        }
+
+        .btn-green {
+            background-color: #27ae60;
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        /* CARD & STYLE AKUN */
+        .card {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 14px 16px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 12px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .stat-val {
+            font-weight: bold;
+        }
+
+        .highlight-box {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            margin-bottom: 12px;
+        }
+
+        .highlight-title {
+            color: #27ae60;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .highlight-value {
+            font-size: 22px;
+            font-weight: 800;
+            color: #111;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .mini-card {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .mini-label {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 6px;
+        }
+
+        .val-green {
+            font-size: 14px;
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        .val-blue {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2980b9;
+        }
+
+        .target-green {
+            font-size: 14px;
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        .target-red {
+            font-size: 14px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .banner-yellow {
+            background-color: #f1c40f;
+            color: #333;
+            text-align: center;
+            padding: 12px;
+            font-weight: bold;
+            font-size: 13px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        /* BOTTOM NAVIGATION BAR */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff;
+            border-top: 1px solid #eaeaea;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            box-shadow: 0 -2px 6px rgba(0,0,0,0.04);
+            z-index: 100;
+        }
+
+        .nav-item {
+            text-align: center;
+            font-size: 11px;
+            color: #888;
+            cursor: pointer;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            fill: #888;
+        }
+
+        .nav-item.active {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .nav-item.active svg {
+            fill: #27ae60;
+        }
+
+        /* SISTEM TAB SWITCHING */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
 </head>
 <body>
 
-<div class="container">
-  <h2>Blue Delivery</h2>
-  
-  <label for="courierName">Nama Kurir:</label>
-  <input type="text" id="courierName" placeholder="Masukkan nama kurir">
+<div class="app-container">
 
-  <label for="totalOmset">Total Omset Transaksi (Rp):</label>
-  <input type="number" id="totalOmset" placeholder="Contoh: 100000" oninput="calculateSalary()">
+    <!-- ==================== 1. TAB HOME / BERANDA ==================== -->
+    <div id="tab-home" class="tab-content active">
+        <div class="top-header">Laporan Boy Delivery</div>
+        
+        <div class="content-padding">
+            <div class="alert-banner">
+                PROSES ANTAR BARANG WAJIB DICEK DAN LEBIH TELITI...!!! HINDARI BARANG MELANGGAR HUKUM DAN AGAMA..!
+            </div>
 
-  <label for="attendance">Uang Hadir Harian:</label>
-  <select id="attendance" onchange="calculateSalary()">
-    <option value="3000">Hadir (Rp 3.000)</option>
-    <option value="0">Tidak Hadir (Rp 0)</option>
-  </select>
+            <label class="checkbox-container">
+                <input type="checkbox" id="lokasiSearah">
+                <span>Lokasi Searah (Centang jika pembelian & antar searah)</span>
+            </label>
 
-  <div class="result">
-    <p><strong>Komisi (12%):</strong> Rp <span id="commissionText">0</span></p>
-    <p><strong>Uang Hadir:</strong> Rp <span id="attendanceText">3000</span></p>
-    <p><strong>Total Gaji Diterima:</strong> Rp <span id="totalSalaryText">3000</span></p>
-  </div>
+            <div class="row-2">
+                <div style="flex:1;">
+                    <div class="section-label">>> Tambah T.Pembelian</div>
+                    <input type="number" id="tambahPembelian" value="0">
+                </div>
+                <div style="flex:1;">
+                    <div class="section-label">>> Cas Modal</div>
+                    <input type="number" id="casModal" value="0">
+                </div>
+            </div>
 
-  <button onclick="saveTransaction()">Simpan Transaksi</button>
+            <div class="section-label">>> Total Order Produk</div>
+            <input type="number" id="totalOrderProduk" value="1">
 
-  <h3>Riwayat Transaksi</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Nama</th>
-        <th>Omset</th>
-        <th>Total Gaji</th>
-      </tr>
-    </thead>
-    <tbody id="historyTable">
-    </tbody>
-  </table>
+            <div class="row-2">
+                <div style="flex:1;">
+                    <div class="section-label">> [+] Tambah T.Bersebelahan</div>
+                    <input type="number" id="tambahBersebelahan" value="0">
+                </div>
+                <div style="flex:1;">
+                    <div class="section-label">> Pindah T.Kosong/Tut</div>
+                    <input type="number" id="pindahKosong" value="0">
+                </div>
+            </div>
+
+            <div class="section-label">>> Ces ronjot (Opsional)</div>
+            <input type="number" id="cesRonjot" value="0">
+
+            <div class="section-label">>> Biaya Parkir (Opsional)</div>
+            <input type="number" id="biayaParkir" value="0">
+
+            <label class="checkbox-container">
+                <input type="checkbox" id="cesHujan">
+                <span style="color: #27ae60;">Ces Hujan (+Rp, 3.000)</span>
+            </label>
+
+            <label class="checkbox-container">
+                <input type="checkbox" id="dorongMotor">
+                <span style="color: #27ae60;">Dorong Motor (+Rp, 10.000)</span>
+            </label>
+
+            <div style="color: #2980b9; font-size: 13px; font-weight: 600; margin: 10px 0; cursor: pointer;">
+                > Tambahkan Keterangan Customer
+            </div>
+
+            <div class="section-label">>> Jenis Orderan</div>
+            <select id="jenisOrder">
+                <option value="">Pilih Jenis Orderan</option>
+                <option value="Makanan">Makanan / Minuman</option>
+                <option value="Paket">Paket / Barang</option>
+            </select>
+
+            <div class="section-label">>> Produk</div>
+            <input type="text" id="namaProduk" placeholder="Nama Produk / Jasa">
+
+            <div class="row-2">
+                <input type="number" id="hargaProduk" placeholder="Harga Produk Cth. 5000">
+                <input type="number" id="jumlahProduk" placeholder="Jumlah Produk">
+            </div>
+
+            <button class="btn-blue" onclick="tambahProduk()">Tambah Produk</button>
+
+            <div class="section-label">>> Lokasi Pembelian</div>
+            <input type="text" placeholder="Cari lokasi..">
+
+            <div class="section-label">>> Lokasi Antar</div>
+            <input type="text" placeholder="Cari lokasi..">
+            
+            <button class="btn-green" onclick="kirimOrderan()">Kirim Orderan Hari Ini</button>
+        </div>
+    </div>
+
+    <!-- ==================== 2. TAB HISTORY ==================== -->
+    <div id="tab-history" class="tab-content">
+        <div class="top-header">History Transaksi</div>
+        <div class="content-padding">
+            <div class="card">
+                <div class="card-title">Riwayat Pengiriman Hari Ini</div>
+                <div id="listRiwayat" style="font-size: 13px; color: #666;">Belum ada riwayat transaksi.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 3. TAB AKUN ==================== -->
+    <div id="tab-akun" class="tab-content">
+        <div class="content-padding" style="padding-top: 16px;">
+            
+            <!-- STATISTIK HARI INI -->
+            <div class="card">
+                <div class="card-title">Statistik Hari Ini</div>
+                <div class="stat-row">
+                    <span>Orderan</span>
+                    <span class="stat-val" id="statOrderan">0</span>
+                </div>
+                <div class="stat-row">
+                    <span>Pendapatan</span>
+                    <span class="stat-val" id="statPendapatan">Rp. 0</span>
+                </div>
+                <div class="stat-row">
+                    <span>Potongan Admin</span>
+                    <span class="stat-val" id="statPotonganAdmin">Rp. 0</span>
+                </div>
+            </div>
+
+            <!-- POTONGAN ADMIN MINGGU INI -->
+            <div class="highlight-box">
+                <div class="highlight-title">Potongan Admin Minggu Ini</div>
+                <div class="highlight-value" id="totalPotonganMingguIni">
+                    Rp. 0 <span style="font-size: 14px; font-weight: normal; color: #555;">(0x)</span>
+                </div>
+            </div>
+
+            <!-- GRID POTONGAN MINGGUAN -->
+            <div class="grid-2" style="margin-bottom: 12px;">
+                <div class="mini-card">
+                    <div class="mini-label">Minggu Ini</div>
+                    <div class="val-green" id="gridMingguIni">Rp. 0 (0x)</div>
+                </div>
+                <div class="mini-card">
+                    <div class="mini-label">Minggu Kemarin</div>
+                    <div class="val-blue">Rp. 54,080 (40x)</div>
+                </div>
+                <div class="mini-card">
+                    <div class="mini-label">Minggu -2</div>
+                    <div class="val-blue">Rp. 0 (0x)</div>
+                </div>
+                <div class="mini-card">
+                    <div class="mini-label">Minggu -3</div>
+                    <div class="val-blue">Rp. 0 (0x)</div>
+                </div>
+            </div>
+
+            <!-- TARGET ORDER MINGGUAN -->
+            <div class="card">
+                <div class="card-title">Target Order Mingguan</div>
+                <div class="grid-2">
+                    <div class="mini-card">
+                        <div class="mini-label">Minggu Ini</div>
+                        <div id="targetMingguIni" class="target-red">0/35 Order</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-label">Minggu Kemarin</div>
+                        <div class="target-green">40/35 Order</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-label">Minggu -2</div>
+                        <div class="target-red">0/35 Order</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-label">Minggu -3</div>
+                        <div class="target-red">0/35 Order</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="banner-yellow">COD BOY DELIVERY</div>
+
+        </div>
+    </div>
+
+    <!-- ==================== BOTTOM NAVIGATION BAR ==================== -->
+    <div class="bottom-nav">
+        <div class="nav-item active" id="nav-home" onclick="switchTab('home')">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            Home
+        </div>
+        <div class="nav-item" id="nav-history" onclick="switchTab('history')">
+            <svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+            History
+        </div>
+        <div class="nav-item" id="nav-akun" onclick="switchTab('akun')">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            Akun
+        </div>
+    </div>
+
 </div>
 
-<!-- Firebase SDK -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+<script>
+    // FUNGSI PERPINDAHAN TAB / MENU
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
 
-  // Konfigurasi Firebase Proyek Blue Delivery
-  const firebaseConfig = {
-    apiKey: "AIzaSyBJVK2_F5HKfIxbJbjQpGk",
-    authDomain: "blue-delivery-82637.firebaseapp.com",
-    databaseURL: "https://blue-delivery-82637-default-rtdb.firebaseio.com",
-    projectId: "blue-delivery-82637",
-    storageBucket: "blue-delivery-82637.firebasestorage.app",
-    messagingSenderId: "664784438256",
-    appId: "1:664784438256:web:0eb965a447",
-    measurementId: "G-SZF80TRJXF"
-  };
-
-  // Inisialisasi Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-
-  // Perhitungan Gaji Automatic
-  window.calculateSalary = function() {
-    const omset = parseFloat(document.getElementById('totalOmset').value) || 0;
-    const attendance = parseFloat(document.getElementById('attendance').value) || 0;
-    
-    const commission = omset * 0.12;
-    const totalSalary = commission + attendance;
-
-    document.getElementById('commissionText').innerText = commission.toLocaleString('id-ID');
-    document.getElementById('attendanceText').innerText = attendance.toLocaleString('id-ID');
-    document.getElementById('totalSalaryText').innerText = totalSalary.toLocaleString('id-ID');
-
-    return { omset, commission, attendance, totalSalary };
-  };
-
-  // Simpan Data ke Firebase Realtime Database
-  window.saveTransaction = function() {
-    const courierName = document.getElementById('courierName').value;
-    if (!courierName) {
-      alert("Harap masukkan nama kurir!");
-      return;
+        document.getElementById('tab-' + tabName).classList.add('active');
+        document.getElementById('nav-' + tabName).classList.add('active');
+        
+        // Scroll otomatis ke paling atas saat berganti tab
+        window.scrollTo(0, 0);
     }
 
-    const { omset, commission, attendance, totalSalary } = window.calculateSalary();
+    // VARIABLE DATA TRANSAKSI REALTIME
+    let totalOrderan = 0;
+    let totalOmset = 0;
+    let riwayatList = [];
+    const TARGET_ORDER = 35;
 
-    push(ref(db, 'transactions'), {
-      courierName: courierName,
-      omset: omset,
-      commission: commission,
-      attendance: attendance,
-      totalSalary: totalSalary,
-      timestamp: new Date().toISOString()
-    }).then(() => {
-      alert("Transaksi berhasil disimpan!");
-      document.getElementById('courierName').value = '';
-      document.getElementById('totalOmset').value = '';
-      window.calculateSalary();
-    }).catch((error) => {
-      alert("Gagal menyimpan: " + error.message);
-    });
-  };
+    function tambahProduk() {
+        let produk = document.getElementById('namaProduk').value;
+        if (!produk) {
+            alert("Harap masukkan nama produk!");
+            return;
+        }
+        alert("Produk '" + produk + "' berhasil ditambahkan!");
+    }
 
-  // Tampilkan Riwayat Realtime
-  onValue(ref(db, 'transactions'), (snapshot) => {
-    const historyTable = document.getElementById('historyTable');
-    historyTable.innerHTML = '';
-    
-    snapshot.forEach((childSnapshot) => {
-      const data = childSnapshot.val();
-      const row = `<tr>
-        <td>${data.courierName}</td>
-        <td>Rp ${data.omset.toLocaleString('id-ID')}</td>
-        <td>Rp ${data.totalSalary.toLocaleString('id-ID')}</td>
-      </tr>`;
-      historyTable.innerHTML = row + historyTable.innerHTML;
-    });
-  });
+    function kirimOrderan() {
+        let harga = parseInt(document.getElementById('hargaProduk').value, 10) || 0;
+        let produk = document.getElementById('namaProduk').value || "Produk Makanan";
+
+        // Fitur kalkulasi opsional
+        let cesHujan = document.getElementById('cesHujan').checked ? 3000 : 0;
+        let dorongMotor = document.getElementById('dorongMotor').checked ? 10000 : 0;
+        let parkir = parseInt(document.getElementById('biayaParkir').value, 10) || 0;
+        
+        let subtotal = harga + cesHujan + dorongMotor + parkir;
+
+        // 1. Tambah Statistik
+        totalOrderan += 1;
+        totalOmset += subtotal;
+
+        let potonganAdmin = Math.round(totalOmset * 0.12); // Contoh hitung potongan 12%
+
+        // 2. Update Tampilan Tab Akun
+        document.getElementById('statOrderan').innerText = totalOrderan;
+        document.getElementById('statPendapatan').innerText = "Rp. " + totalOmset.toLocaleString('id-ID');
+        document.getElementById('statPotonganAdmin').innerText = "Rp. " + potonganAdmin.toLocaleString('id-ID');
+
+        document.getElementById('totalPotonganMingguIni').innerHTML = 
+            `Rp. ${potonganAdmin.toLocaleString('id-ID')} <span style="font-size: 14px; font-weight: normal; color: #555;">(${totalOrderan}x)</span>`;
+
+        document.getElementById('gridMingguIni').innerText = `Rp. ${potonganAdmin.toLocaleString('id-ID')} (${totalOrderan}x)`;
+
+        // Update Target Order Mingguan
+        let targetElem = document.getElementById('targetMingguIni');
+        targetElem.innerText = `${totalOrderan}/${TARGET_ORDER} Order`;
+        
+        if (totalOrderan >= TARGET_ORDER) {
+            targetElem.className = "target-green";
+        } else {
+            targetElem.className = "target-red";
+        }
+
+        // 3. Tambah ke Tab History
+        riwayatList.push(`• ${produk} - Rp ${subtotal.toLocaleString('id-ID')}`);
+        document.getElementById('listRiwayat').innerHTML = riwayatList.join('<br>');
+
+        // Reset Input
+        document.getElementById('namaProduk').value = '';
+        document.getElementById('hargaProduk').value = '';
+        
+        alert("Orderan berhasil dicatat! Cek statistik di menu Akun.");
+    }
 </script>
 
 </body>
