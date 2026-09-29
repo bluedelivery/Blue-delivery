@@ -1,552 +1,16 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blue Delivery</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background-color: #f6f8fa;
-            display: flex;
-            justify-content: center;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 420px;
-            background: #f6f8fa;
-            min-height: 100vh;
-            padding-bottom: 100px;
-            position: relative;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
-        }
-
-        .top-header {
-            background-color: #27ae60;
-            color: white;
-            padding: 14px 16px;
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .content-padding {
-            padding: 12px 16px;
-        }
-
-        .alert-banner {
-            background: #ffffff;
-            border-radius: 6px;
-            padding: 12px;
-            text-align: center;
-            font-size: 12px;
-            font-weight: bold;
-            color: #333;
-            line-height: 1.4;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            border-top: 4px solid #f1c40f;
-        }
-
-        .section-label {
-            font-size: 13px;
-            color: #333;
-            margin-top: 10px;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        input[type="text"], input[type="number"], select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #dcdcdc;
-            font-size: 13px;
-            margin-bottom: 8px;
-            outline: none;
-            background: #fff;
-        }
-
-        .row-2 {
-            display: flex;
-            gap: 8px;
-        }
-
-        .product-item-box {
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 8px;
-            position: relative;
-        }
-
-        .btn-add-product {
-            background-color: #1a73e8;
-            color: white;
-            border: none;
-            padding: 10px 12px;
-            font-size: 13px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-bottom: 10px;
-            width: 100%;
-        }
-
-        .btn-remove {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            font-size: 11px;
-            border-radius: 4px;
-            cursor: pointer;
-            float: right;
-            margin-bottom: 5px;
-        }
-
-        .input-group-gps {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .input-group-gps input {
-            margin-bottom: 0;
-        }
-
-        .btn-gps {
-            background-color: #1a73e8;
-            color: white;
-            border: none;
-            padding: 10px 12px;
-            font-size: 12px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            font-size: 13px;
-            color: #333;
-            background: #fff;
-            padding: 8px 10px;
-            border-radius: 6px;
-            border: 1px solid #dcdcdc;
-        }
-
-        .checkbox-group input {
-            width: 16px;
-            height: 16px;
-            margin-bottom: 0;
-        }
-
-        .auto-calc-box {
-            background: #e8f0fe;
-            border: 1px dashed #1a73e8;
-            border-radius: 8px;
-            padding: 12px;
-            margin: 12px 0;
-            text-align: center;
-        }
-
-        .auto-calc-title {
-            font-size: 12px;
-            color: #1a73e8;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-
-        .auto-calc-value {
-            font-size: 20px;
-            font-weight: 800;
-            color: #1a73e8;
-        }
-
-        .btn-primary-action {
-            background-color: #27ae60;
-            color: white;
-            font-weight: bold;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-
-        .card {
-            background: #ffffff;
-            border-radius: 10px;
-            padding: 14px 16px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-            margin-bottom: 12px;
-        }
-
-        .card-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #555;
-            margin-bottom: 12px;
-        }
-
-        .profile-card {
-            background: linear-gradient(135deg, #1a73e8, #4285f4);
-            color: white;
-            border-radius: 10px;
-            padding: 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .profile-name {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-
-        .profile-info {
-            font-size: 13px;
-            opacity: 0.9;
-        }
-
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .stat-val {
-            font-weight: bold;
-        }
-
-        .highlight-box {
-            background: #ffffff;
-            border-radius: 10px;
-            padding: 16px;
-            text-align: center;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-            margin-bottom: 12px;
-        }
-
-        .highlight-title {
-            color: #1a73e8;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        .highlight-value {
-            font-size: 22px;
-            font-weight: 800;
-            color: #111;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .mini-card {
-            background: #ffffff;
-            border-radius: 8px;
-            padding: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            text-align: center;
-        }
-
-        .mini-label {
-            font-size: 12px;
-            color: #777;
-            margin-bottom: 6px;
-        }
-
-        .val-blue {
-            font-size: 13px;
-            font-weight: bold;
-            color: #1a73e8;
-        }
-
-        .target-red {
-            font-size: 13px;
-            font-weight: bold;
-            color: #e74c3c;
-        }
-
-        .target-green {
-            font-size: 13px;
-            font-weight: bold;
-            color: #27ae60;
-        }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 420px;
-            background: #ffffff;
-            border-top: 1px solid #eaeaea;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            box-shadow: 0 -3px 10px rgba(0,0,0,0.1);
-            z-index: 99999;
-        }
-
-        .nav-item {
-            text-align: center;
-            font-size: 12px;
-            color: #888;
-            cursor: pointer;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-            background: transparent;
-            border: none;
-            outline: none;
-        }
-
-        .nav-item svg {
-            width: 22px;
-            height: 22px;
-            fill: #888;
-            pointer-events: none;
-        }
-
-        .nav-item.active {
-            color: #27ae60;
-            font-weight: bold;
-        }
-
-        .nav-item.active svg {
-            fill: #27ae60;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-    </style>
-</head>
-<body>
-
-<div class="app-container">
-    <!-- TAB HOME -->
-    <div id="tab-home" class="tab-content active">
-        <div class="top-header">Laporan Blue Delivery</div>
-        <div class="content-padding">
-            <div class="alert-banner">
-                PROSES ANTAR BARANG WAJIB DICEK DAN LEBIH TELITI...!!! HINDARI BARANG MELANGGAR HUKUM DAN AGAMA..!
-            </div>
-            
-            <div class="section-label">>> Jenis Orderan</div>
-            <select id="jenisOrder" onchange="hitungOtomatis()">
-                <option value="7000">Makanan / Barang (Tarif Dasar Rp 7.000)</option>
-                <option value="ojek">Ojek / Ambil Barang Lunas</option>
-            </select>
-
-            <div id="boxJarakKM" style="display:none;">
-                <div class="section-label">>> Estimasi Jarak (Kilometer)</div>
-                <input type="number" id="jarakKm" value="2" min="1" oninput="hitungOtomatis()" placeholder="Cth: 3">
-            </div>
-
-            <div class="section-label">>> Produk</div>
-            <div id="containerProduk">
-                <div class="product-item-box">
-                    <input type="text" class="namaProduk" placeholder="Nama Produk / Jasa">
-                    <div class="row-2">
-                        <input type="number" class="hargaProduk" placeholder="Harga Cth. 5000" value="0" oninput="hitungOtomatis()">
-                        <input type="number" class="jumlahProduk" placeholder="Jumlah Produk" value="1" oninput="hitungOtomatis()">
-                    </div>
-                </div>
-            </div>
-            <button class="btn-add-product" onclick="tambahBarisProduk()">+ Tambah Produk Lain</button>
-
-            <div class="section-label">>> Lokasi Pembelian</div>
-            <div class="input-group-gps">
-                <input type="text" id="lokasiPembelian" placeholder="Cari lokasi..">
-                <button class="btn-gps" onclick="ambilLokasi('lokasiPembelian')">📍 GPS</button>
-            </div>
-
-            <div class="section-label">>> Lokasi Antar</div>
-            <div class="input-group-gps">
-                <input type="text" id="lokasiAntar" placeholder="Cari lokasi..">
-                <button class="btn-gps" onclick="ambilLokasi('lokasiAntar')">📍 GPS</button>
-            </div>
-
-            <div class="row-2">
-                <div style="flex:1;">
-                    <div class="section-label">>> Tambah T.Pembelian</div>
-                    <input type="number" id="tambahPembelian" value="0" min="0" oninput="hitungOtomatis()">
-                </div>
-                <div style="flex:1;">
-                    <div class="section-label">>> Cas Modal</div>
-                    <input type="number" id="casModal" value="0" min="0" oninput="hitungOtomatis()">
-                </div>
-            </div>
-
-            <div class="section-label">>> Total Order Produk</div>
-            <input type="number" id="totalOrderProduk" value="1" min="1" oninput="hitungOtomatis()">
-
-            <div class="row-2">
-                <div style="flex:1;">
-                    <div class="section-label">> [+] Tambah T.Bersebelahan</div>
-                    <input type="number" id="tambahBersebelahan" value="0" min="0" oninput="hitungOtomatis()">
-                </div>
-                <div style="flex:1;">
-                    <div class="section-label">> Pindah T.Kosong/Tutup</div>
-                    <input type="number" id="pindahTempat" value="0" min="0" oninput="hitungOtomatis()">
-                </div>
-            </div>
-
-            <div class="section-label">>> Ces ronjot (Opsional)</div>
-            <input type="number" id="cesRonjot" value="0" min="0" oninput="hitungOtomatis()">
-
-            <div class="section-label">>> Biaya Parkir (Opsional)</div>
-            <input type="number" id="biayaParkir" value="0" min="0" oninput="hitungOtomatis()">
-
-            <div class="checkbox-group">
-                <input type="checkbox" id="cesHujan" onchange="hitungOtomatis()">
-                <label for="cesHujan">Ces Hujan (+Rp, 3.000)</label>
-            </div>
-
-            <div class="checkbox-group">
-                <input type="checkbox" id="dorongMotor" onchange="hitungOtomatis()">
-                <label for="dorongMotor">Dorong Motor (+Rp, 10.000)</label>
-            </div>
-
-            <div class="section-label" style="color: #1a73e8; cursor: pointer; margin-bottom: 12px;">> Tambahkan Keterangan Customer</div>
-
-            <!-- KOTAK HASIL HITUNG OTOMATIS -->
-            <div class="auto-calc-box">
-                <div class="auto-calc-title">TOTAL BIAYA OTOMATIS</div>
-                <div class="auto-calc-value" id="labelTotalOtomatis">Rp. 0</div>
-            </div>
-
-            <button class="btn-primary-action" onclick="kirimOrderan()">Kirim Orderan Hari Ini</button>
-        </div>
-    </div>
-
-    <!-- TAB HISTORY -->
-    <div id="tab-history" class="tab-content">
-        <div class="top-header">History Transaksi</div>
-        <div class="content-padding">
-            <div class="card">
-                <div class="card-title">Riwayat Pengiriman Hari Ini</div>
-                <div id="listRiwayat" style="font-size: 13px; color: #666;">Belum ada riwayat transaksi.</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- TAB AKUN -->
-    <div id="tab-akun" class="tab-content">
-        <div class="top-header">Dashboard Rekap Kurir</div>
-        <div class="content-padding">
-            <div class="profile-card">
-                <div class="profile-name">Blue Delivery</div>
-                <div class="profile-info">ID Kurir: BD-001 | Status: Aktif 🟢</div>
-            </div>
-
-            <div class="grid-2" style="margin-bottom: 12px;">
-                <div class="mini-card">
-                    <div class="mini-label">Minggu Ini</div>
-                    <div class="val-blue" id="gridMingguIni">Rp. 0 (0x)</div>
-                </div>
-                <div class="mini-card">
-                    <div class="mini-label">Minggu Kemarin</div>
-                    <div class="val-blue" id="gridMingguKemarin">-</div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">Statistik Hari Ini</div>
-                <div class="stat-row">
-                    <span>Orderan</span>
-                    <span class="stat-val" id="statOrderan">0</span>
-                </div>
-                <div class="stat-row">
-                    <span>Pendapatan</span>
-                    <span class="stat-val" id="statPendapatan">Rp. 0</span>
-                </div>
-                <div class="stat-row">
-                    <span>Potongan Admin</span>
-                    <span class="stat-val" id="statPotonganAdmin">Rp. 0</span>
-                </div>
-            </div>
-
-            <div class="highlight-box">
-                <div class="highlight-title">Potongan Admin Minggu Ini</div>
-                <div class="highlight-value" id="totalPotonganMingguIni">
-                    Rp. 0 <span style="font-size: 14px; font-weight: normal; color: #555;">(0x)</span>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">Target Order Mingguan</div>
-                <div class="grid-2">
-                    <div class="mini-card">
-                        <div class="mini-label">Minggu Ini</div>
-                        <div id="targetMingguIni" class="target-red">0/35 Order</div>
-                    </div>
-                    <div class="mini-card">
-                        <div class="mini-label">Minggu Kemarin</div>
-                        <div class="target-red">0/35 Order</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- BOTTOM NAVIGATION -->
-    <div class="bottom-nav">
-        <button class="nav-item active" id="nav-home" onclick="switchTab('home')">
-            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-            Home
-        </button>
-        <button class="nav-item" id="nav-history" onclick="switchTab('history')">
-            <svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
-            History
-        </button>
-        <button class="nav-item" id="nav-akun" onclick="switchTab('akun')">
-            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            Akun
-        </button>
-    </div>
-</div>
-
 <script>
+    // Menyimpan data transaksi sederhana di LocalStorage agar tersimpan otomatis
+    let riwayatTransaksi = JSON.parse(localStorage.getItem('bd_riwayat')) || [];
+
     function switchTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
         document.getElementById('tab-' + tabName).classList.add('active');
         document.getElementById('nav-' + tabName).classList.add('active');
         window.scrollTo(0, 0);
+        if (tabName === 'akun' || tabName === 'history') {
+            muatDataAkun();
+        }
     }
 
     function ambilLokasi(elementId) {
@@ -605,4 +69,83 @@
         let listJumlah = document.querySelectorAll('.jumlahProduk');
         let totalHargaBarang = 0;
 
-        for 
+        for (let i = 0; i < listHarga.length; i++) {
+            let h = parseFloat(listHarga[i].value) || 0;
+            let j = parseFloat(listJumlah[i].value) || 1;
+            totalHargaBarang += (h * j);
+        }
+
+        let tambahPembelian = parseFloat(document.getElementById('tambahPembelian').value) || 0;
+        let casModal = parseFloat(document.getElementById('casModal').value) || 0;
+        let totalOrderProduk = parseFloat(document.getElementById('totalOrderProduk').value) || 1;
+        let tambahBersebelahan = parseFloat(document.getElementById('tambahBersebelahan').value) || 0;
+        let pindahTempat = parseFloat(document.getElementById('pindahTempat').value) || 0;
+        let cesRonjot = parseFloat(document.getElementById('cesRonjot').value) || 0;
+        let biayaParkir = parseFloat(document.getElementById('biayaParkir').value) || 0;
+        let cesHujan = document.getElementById('cesHujan').checked ? 3000 : 0;
+        let dorongMotor = document.getElementById('dorongMotor').checked ? 10000 : 0;
+
+        // Kalkulasi total akhir
+        let totalBiaya = tarifDasar + totalHargaBarang + tambahPembelian + casModal + (totalOrderProduk * 1000) + tambahBersebelahan + pindahTempat + cesRonjot + biayaParkir + cesHujan + dorongMotor;
+
+        document.getElementById('labelTotalOtomatis').innerText = "Rp. " + totalBiaya.toLocaleString('id-ID');
+        return totalBiaya;
+    }
+
+    function kirimOrderan() {
+        let total = hitungOtomatis();
+        let waktu = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        
+        let dataBaru = {
+            waktu: waktu,
+            total: total,
+            tujuan: document.getElementById('lokasiAntar').value || 'Tujuan Lokal'
+        };
+
+        riwayatTransaksi.unshift(dataBaru);
+        localStorage.setItem('bd_riwayat', JSON.stringify(riwayatTransaksi));
+
+        alert("Orderan berhasil dikirim! Total: Rp. " + total.toLocaleString('id-ID'));
+        
+        // Reset form sederhana
+        document.getElementById('lokasiAntar').value = '';
+        document.getElementById('lokasiPembelian').value = '';
+        hitungOtomatis();
+        muatDataAkun();
+    }
+
+    function muatDataAkun() {
+        let containerRiwayat = document.getElementById('listRiwayat');
+        if (riwayatTransaksi.length === 0) {
+            containerRiwayat.innerHTML = "Belum ada riwayat transaksi.";
+            document.getElementById('statOrderan').innerText = "0";
+            document.getElementById('statPendapatan').innerText = "Rp. 0";
+            document.getElementById('gridMingguIni').innerText = "Rp. 0 (0x)";
+            document.getElementById('totalPotonganMingguIni').innerHTML = `Rp. 0 <span style="font-size: 14px; font-weight: normal; color: #555;">(0x)</span>`;
+            document.getElementById('targetMingguIni').innerText = "0/35 Order";
+        } else {
+            let html = "";
+            let totalPendapatanHariIni = 0;
+            riwayatTransaksi.forEach((item, index) => {
+                html += `<div style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                    <b>[${item.waktu}]</b> ${item.tujuan} - <span style="color: #27ae60; font-weight: bold;">Rp. ${item.total.toLocaleString('id-ID')}</span>
+                </div>`;
+                totalPendapatanHariIni += item.total;
+            });
+            containerRiwayat.innerHTML = html;
+
+            document.getElementById('statOrderan').innerText = riwayatTransaksi.length;
+            document.getElementById('statPendapatan').innerText = "Rp. " + totalPendapatanHariIni.toLocaleString('id-ID');
+            document.getElementById('gridMingguIni').innerText = `Rp. ${totalPendapatanHariIni.toLocaleString('id-ID')} (${riwayatTransaksi.length}x)`;
+            document.getElementById('totalPotonganMingguIni').innerHTML = `Rp. 0 <span style="font-size: 14px; font-weight: normal; color: #555;">(${riwayatTransaksi.length}x)</span>`;
+            document.getElementById('targetMingguIni').innerText = `${riwayatTransaksi.length}/35 Order`;
+        }
+    }
+
+    // Jalankan saat pertama kali muat
+    window.onload = function() {
+        hitungOtomatis();
+        muatDataAkun();
+    };
+            </script>
+            
