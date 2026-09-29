@@ -118,17 +118,26 @@
             gap: 8px;
         }
 
-        .btn-blue {
-            background-color: #1a73e8;
-            color: white;
-            border: none;
+        .auto-calc-box {
+            background: #e8f0fe;
+            border: 1px dashed #1a73e8;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 12px 0;
+            text-align: center;
+        }
+
+        .auto-calc-title {
+            font-size: 12px;
+            color: #1a73e8;
             font-weight: bold;
-            padding: 10px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            width: auto;
-            margin-top: 4px;
-            margin-bottom: 15px;
+            margin-bottom: 4px;
+        }
+
+        .auto-calc-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1a73e8;
         }
 
         .btn-primary-action {
@@ -327,67 +336,78 @@
             <div class="alert-banner">
                 PROSES ANTAR BARANG WAJIB DICEK DAN LEBIH TELITI...!!! HINDARI BARANG MELANGGAR HUKUM DAN AGAMA..!
             </div>
+            
             <div class="section-label">>> Jenis Orderan</div>
-            <select id="jenisOrder">
-                <option value="">Pilih Jenis Orderan</option>
-                <option value="Makanan">Makanan / Minuman</option>
-                <option value="Paket">Paket / Barang</option>
+            <select id="jenisOrder" onchange="hitungOtomatis()">
+                <option value="0">Pilih Jenis Orderan</option>
+                <option value="7000">Makanan / Minuman (Tarif Dasar Rp 7.000)</option>
+                <option value="10000">Paket / Barang (Tarif Dasar Rp 10.000)</option>
             </select>
-            <div class="section-label">>> Produk</div>
-            <input type="text" id="namaProduk" placeholder="Nama Produk / Jasa">
-            <div class="row-2">
-                <input type="number" id="hargaProduk" placeholder="Harga Produk Cth. 5000">
-                <input type="number" id="jumlahProduk" placeholder="Jumlah Produk">
-            </div>
-            <button class="btn-blue" onclick="tambahProduk()">Tambah Produk</button>
+
+            <div class="section-label">>> Produk / Catatan</div>
+            <input type="text" id="namaProduk" placeholder="Nama Produk / Keterangan Warung">
+
             <div class="section-label">>> Lokasi Pembelian</div>
             <div class="input-group-gps">
-                <input type="text" id="lokasiPembelian" placeholder="Cari lokasi atau klik GPS..">
+                <input type="text" id="lokasiPembelian" placeholder="Ketik manual atau klik GPS..">
                 <button class="btn-gps" onclick="ambilLokasi('lokasiPembelian')">📍 GPS</button>
             </div>
+
             <div class="section-label">>> Lokasi Antar</div>
             <div class="input-group-gps">
-                <input type="text" id="lokasiAntar" placeholder="Cari lokasi atau klik GPS..">
+                <input type="text" id="lokasiAntar" placeholder="Ketik manual atau klik GPS..">
                 <button class="btn-gps" onclick="ambilLokasi('lokasiAntar')">📍 GPS</button>
             </div>
+
             <label class="checkbox-container">
-                <input type="checkbox" id="lokasiSearah">
-                <span>Lokasi Searah (Centang jika pembelian & antar searah)</span>
+                <input type="checkbox" id="lokasiSearah" onchange="hitungOtomatis()">
+                <span>Lokasi Searah (Diskon/Penyesuaian otomatis)</span>
             </label>
+
             <div class="row-2">
                 <div style="flex:1;">
                     <div class="section-label">>> Tambah T.Pembelian</div>
-                    <input type="number" id="tambahPembelian" value="0">
+                    <input type="number" id="tambahPembelian" value="0" oninput="hitungOtomatis()">
                 </div>
                 <div style="flex:1;">
                     <div class="section-label">>> Cas Modal</div>
-                    <input type="number" id="casModal" value="0">
+                    <input type="number" id="casModal" value="0" oninput="hitungOtomatis()">
                 </div>
             </div>
-            <div class="section-label">>> Total Order Produk</div>
-            <input type="number" id="totalOrderProduk" value="1">
+
             <div class="row-2">
                 <div style="flex:1;">
-                    <div class="section-label">> [+] Tambah T.Bersebelahan</div>
-                    <input type="number" id="tambahBersebelahan" value="0">
+                    <div class="section-label">> [+] T.Bersebelahan</div>
+                    <input type="number" id="tambahBersebelahan" value="0" oninput="hitungOtomatis()">
                 </div>
                 <div style="flex:1;">
-                    <div class="section-label">> Pindah T.Kosong/Tut</div>
-                    <input type="number" id="pindahKosong" value="0">
+                    <div class="section-label">> Pindah T.Kosong</div>
+                    <input type="number" id="pindahKosong" value="0" oninput="hitungOtomatis()">
                 </div>
             </div>
+
             <div class="section-label">>> Ces ronjot (Opsional)</div>
-            <input type="number" id="cesRonjot" value="0">
+            <input type="number" id="cesRonjot" value="0" oninput="hitungOtomatis()">
+
             <div class="section-label">>> Biaya Parkir (Opsional)</div>
-            <input type="number" id="biayaParkir" value="0">
+            <input type="number" id="biayaParkir" value="0" oninput="hitungOtomatis()">
+
             <label class="checkbox-container">
-                <input type="checkbox" id="cesHujan">
-                <span style="color: #1a73e8;">Ces Hujan (+Rp, 3.000)</span>
+                <input type="checkbox" id="cesHujan" onchange="hitungOtomatis()">
+                <span style="color: #1a73e8;">Ces Hujan (+Rp 3.000)</span>
             </label>
+            
             <label class="checkbox-container">
-                <input type="checkbox" id="dorongMotor">
-                <span style="color: #1a73e8;">Dorong Motor (+Rp, 10.000)</span>
+                <input type="checkbox" id="dorongMotor" onchange="hitungOtomatis()">
+                <span style="color: #1a73e8;">Dorong Motor (+Rp 10.000)</span>
             </label>
+
+            <!-- KOTAK HASIL HITUNG OTOMATIS -->
+            <div class="auto-calc-box">
+                <div class="auto-calc-title">ESTIMASI TARIF OTOMATIS</div>
+                <div class="auto-calc-value" id="labelTotalOtomatis">Rp. 0</div>
+            </div>
+
             <button class="btn-primary-action" onclick="kirimOrderan()">Kirim Orderan Hari Ini</button>
         </div>
     </div>
@@ -504,9 +524,7 @@
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function(position) {
-                    let lat = position.coords.latitude;
-                    let lon = position.coords.longitude;
-                    inputField.value = `Lokasi (${lat.toFixed(4)}, ${lon.toFixed(4)})`;
+                    inputField.value = "Lokasi GPS (" + position.coords.latitude.toFixed(4) + ", " + position.coords.longitude.toFixed(4) + ")";
                 },
                 function(error) {
                     inputField.value = "Kec. Tikung, Lamongan";
@@ -518,30 +536,41 @@
         }
     }
 
+    // Fungsi Hitung Otomatis Berjalan Real-time
+    function hitungOtomatis() {
+        let tarifDasar = parseInt(document.getElementById('jenisOrder').value) || 0;
+        let tPembelian = parseInt(document.getElementById('tambahPembelian').value) || 0;
+        let casModal = parseInt(document.getElementById('casModal').value) || 0;
+        let tBersebelahan = parseInt(document.getElementById('tambahBersebelahan').value) || 0;
+        let pindahKosong = parseInt(document.getElementById('pindahKosong').value) || 0;
+        let cesRonjot = parseInt(document.getElementById('cesRonjot').value) || 0;
+        let biayaParkir = parseInt(document.getElementById('biayaParkir').value) || 0;
+        
+        let cesHujan = document.getElementById('cesHujan').checked ? 3000 : 0;
+        let dorongMotor = document.getElementById('dorongMotor').checked ? 10000 : 0;
+
+        let total = tarifDasar + tPembelian + casModal + tBersebelahan + pindahKosong + cesRonjot + biayaParkir + cesHujan + dorongMotor;
+        
+        document.getElementById('labelTotalOtomatis').innerText = "Rp. " + total.toLocaleString('id-ID');
+        return total;
+    }
+
     let totalOrderan = 0;
     let totalOmset = 0;
     let riwayatList = [];
     const TARGET_ORDER = 35;
 
-    function tambahProduk() {
-        let produk = document.getElementById('namaProduk').value;
-        if (!produk) {
-            alert("Harap masukkan nama produk!");
+    function kirimOrderan() {
+        let produk = document.getElementById('namaProduk').value || "Orderan Kurir";
+        let totalBiaya = hitungOtomatis();
+
+        if (totalBiaya <= 0) {
+            alert("Silakan pilih jenis orderan atau tentukan tarif terlebih dahulu!");
             return;
         }
-        alert("Produk '" + produk + "' berhasil ditambahkan!");
-    }
-
-    function kirimOrderan() {
-        let harga = parseInt(document.getElementById('hargaProduk').value, 10) || 0;
-        let produk = document.getElementById('namaProduk').value || "Produk Makanan";
-        let cesHujan = document.getElementById('cesHujan').checked ? 3000 : 0;
-        let dorongMotor = document.getElementById('dorongMotor').checked ? 10000 : 0;
-        let parkir = parseInt(document.getElementById('biayaParkir').value, 10) || 0;
-        let subtotal = harga + cesHujan + dorongMotor + parkir;
 
         totalOrderan += 1;
-        totalOmset += subtotal;
+        totalOmset += totalBiaya;
         let potonganAdmin = Math.round(totalOmset * 0.12);
 
         document.getElementById('statOrderan').innerText = totalOrderan;
@@ -552,18 +581,4 @@
         document.getElementById('gridMingguIni').innerText = `Rp. ${potonganAdmin.toLocaleString('id-ID')} (${totalOrderan}x)`;
 
         let targetElem = document.getElementById('targetMingguIni');
-        targetElem.innerText = `${totalOrderan}/${TARGET_ORDER} Order`;
-        targetElem.className = totalOrderan >= TARGET_ORDER ? "target-green" : "target-red";
-
-        riwayatList.push(`• ${produk} - Rp ${subtotal.toLocaleString('id-ID')}`);
-        document.getElementById('listRiwayat').innerHTML = riwayatList.join('<br>');
-
-        document.getElementById('namaProduk').value = '';
-        document.getElementById('hargaProduk').value = '';
-        document.getElementById('lokasiPembelian').value = '';
-        document.getElementById('lokasiAntar').value = '';
-        alert("Orderan berhasil dicatat!");
-    }
-</script>
-</body>
-</html>
+        targetElem.innerText = `$
