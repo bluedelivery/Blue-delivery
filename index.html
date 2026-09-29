@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Boy Delivery</title>
+    <title>Nota Blue Delivery</title>
     <style>
         * {
             box-sizing: border-box;
@@ -18,20 +18,18 @@
             justify-content: center;
         }
 
-        /* Container Aplikasi Mobile */
         .app-container {
             width: 100%;
             max-width: 420px;
             background: #f6f8fa;
             min-height: 100vh;
-            padding-bottom: 80px; /* Jarak untuk Bottom Nav */
+            padding-bottom: 80px;
             position: relative;
             box-shadow: 0 0 10px rgba(0,0,0,0.05);
         }
 
-        /* Header Aplikasi */
         .top-header {
-            background-color: #27ae60;
+            background-color: #1a73e8; /* Warna Biru Utama */
             color: white;
             padding: 14px 16px;
             font-size: 16px;
@@ -43,7 +41,6 @@
             padding: 12px 16px;
         }
 
-        /* BANNER WARNING (BERANDA) */
         .alert-banner {
             background: #ffffff;
             border-radius: 8px;
@@ -58,7 +55,6 @@
             text-transform: uppercase;
         }
 
-        /* FORM INPUT (BERANDA) */
         .section-label {
             font-size: 13px;
             color: #444;
@@ -100,7 +96,7 @@
         }
 
         .btn-blue {
-            background-color: #2980b9;
+            background-color: #1a73e8;
             color: white;
             border: none;
             font-weight: bold;
@@ -112,8 +108,8 @@
             margin-bottom: 15px;
         }
 
-        .btn-green {
-            background-color: #27ae60;
+        .btn-primary-action {
+            background-color: #1a73e8; /* Diubah jadi Biru */
             color: white;
             font-weight: bold;
             border: none;
@@ -125,7 +121,6 @@
             font-size: 14px;
         }
 
-        /* CARD & STYLE AKUN */
         .card {
             background: #ffffff;
             border-radius: 10px;
@@ -163,7 +158,7 @@
         }
 
         .highlight-title {
-            color: #27ae60;
+            color: #1a73e8;
             font-size: 14px;
             font-weight: 600;
             margin-bottom: 6px;
@@ -195,28 +190,22 @@
             margin-bottom: 6px;
         }
 
-        .val-green {
-            font-size: 14px;
-            font-weight: bold;
-            color: #27ae60;
-        }
-
         .val-blue {
             font-size: 14px;
             font-weight: bold;
-            color: #2980b9;
-        }
-
-        .target-green {
-            font-size: 14px;
-            font-weight: bold;
-            color: #27ae60;
+            color: #1a73e8;
         }
 
         .target-red {
             font-size: 14px;
             font-weight: bold;
             color: #e74c3c;
+        }
+
+        .target-green {
+            font-size: 14px;
+            font-weight: bold;
+            color: #27ae60;
         }
 
         .banner-yellow {
@@ -230,7 +219,6 @@
             margin-top: 10px;
         }
 
-        /* BOTTOM NAVIGATION BAR */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -264,15 +252,14 @@
         }
 
         .nav-item.active {
-            color: #27ae60;
+            color: #1a73e8;
             font-weight: bold;
         }
 
         .nav-item.active svg {
-            fill: #27ae60;
+            fill: #1a73e8;
         }
 
-        /* SISTEM TAB SWITCHING */
         .tab-content {
             display: none;
         }
@@ -286,14 +273,38 @@
 
 <div class="app-container">
 
-    <!-- ==================== 1. TAB HOME / BERANDA ==================== -->
+    <!-- TAB HOME -->
     <div id="tab-home" class="tab-content active">
-        <div class="top-header">Laporan Boy Delivery</div>
+        <div class="top-header">Nota Blue Delivery</div>
         
         <div class="content-padding">
             <div class="alert-banner">
                 PROSES ANTAR BARANG WAJIB DICEK DAN LEBIH TELITI...!!! HINDARI BARANG MELANGGAR HUKUM DAN AGAMA..!
             </div>
+
+            <!-- URUTAN SESUAI PERMINTAAN ANDA -->
+            <div class="section-label">>> Jenis Orderan</div>
+            <select id="jenisOrder">
+                <option value="">Pilih Jenis Orderan</option>
+                <option value="Makanan">Makanan / Minuman</option>
+                <option value="Paket">Paket / Barang</option>
+            </select>
+
+            <div class="section-label">>> Produk</div>
+            <input type="text" id="namaProduk" placeholder="Nama Produk / Jasa">
+
+            <div class="row-2">
+                <input type="number" id="hargaProduk" placeholder="Harga Produk Cth. 5000">
+                <input type="number" id="jumlahProduk" placeholder="Jumlah Produk">
+            </div>
+
+            <button class="btn-blue" onclick="tambahProduk()">Tambah Produk</button>
+
+            <div class="section-label">>> Lokasi Pembelian</div>
+            <input type="text" placeholder="Cari lokasi..">
+
+            <div class="section-label">>> Lokasi Antar</div>
+            <input type="text" placeholder="Cari lokasi..">
 
             <label class="checkbox-container">
                 <input type="checkbox" id="lokasiSearah">
@@ -333,46 +344,23 @@
 
             <label class="checkbox-container">
                 <input type="checkbox" id="cesHujan">
-                <span style="color: #27ae60;">Ces Hujan (+Rp, 3.000)</span>
+                <span style="color: #1a73e8;">Ces Hujan (+Rp, 3.000)</span>
             </label>
 
             <label class="checkbox-container">
                 <input type="checkbox" id="dorongMotor">
-                <span style="color: #27ae60;">Dorong Motor (+Rp, 10.000)</span>
+                <span style="color: #1a73e8;">Dorong Motor (+Rp, 10.000)</span>
             </label>
 
-            <div style="color: #2980b9; font-size: 13px; font-weight: 600; margin: 10px 0; cursor: pointer;">
+            <div style="color: #1a73e8; font-size: 13px; font-weight: 600; margin: 10px 0; cursor: pointer;">
                 > Tambahkan Keterangan Customer
             </div>
-
-            <div class="section-label">>> Jenis Orderan</div>
-            <select id="jenisOrder">
-                <option value="">Pilih Jenis Orderan</option>
-                <option value="Makanan">Makanan / Minuman</option>
-                <option value="Paket">Paket / Barang</option>
-            </select>
-
-            <div class="section-label">>> Produk</div>
-            <input type="text" id="namaProduk" placeholder="Nama Produk / Jasa">
-
-            <div class="row-2">
-                <input type="number" id="hargaProduk" placeholder="Harga Produk Cth. 5000">
-                <input type="number" id="jumlahProduk" placeholder="Jumlah Produk">
-            </div>
-
-            <button class="btn-blue" onclick="tambahProduk()">Tambah Produk</button>
-
-            <div class="section-label">>> Lokasi Pembelian</div>
-            <input type="text" placeholder="Cari lokasi..">
-
-            <div class="section-label">>> Lokasi Antar</div>
-            <input type="text" placeholder="Cari lokasi..">
             
-            <button class="btn-green" onclick="kirimOrderan()">Kirim Orderan Hari Ini</button>
+            <button class="btn-primary-action" onclick="kirimOrderan()">Kirim Orderan Hari Ini</button>
         </div>
     </div>
 
-    <!-- ==================== 2. TAB HISTORY ==================== -->
+    <!-- TAB HISTORY -->
     <div id="tab-history" class="tab-content">
         <div class="top-header">History Transaksi</div>
         <div class="content-padding">
@@ -383,11 +371,11 @@
         </div>
     </div>
 
-    <!-- ==================== 3. TAB AKUN ==================== -->
+    <!-- TAB AKUN -->
     <div id="tab-akun" class="tab-content">
-        <div class="content-padding" style="padding-top: 16px;">
+        <div class="top-header">Dashboard Rekap Kurir</div>
+        <div class="content-padding">
             
-            <!-- STATISTIK HARI INI -->
             <div class="card">
                 <div class="card-title">Statistik Hari Ini</div>
                 <div class="stat-row">
@@ -404,7 +392,6 @@
                 </div>
             </div>
 
-            <!-- POTONGAN ADMIN MINGGU INI -->
             <div class="highlight-box">
                 <div class="highlight-title">Potongan Admin Minggu Ini</div>
                 <div class="highlight-value" id="totalPotonganMingguIni">
@@ -412,15 +399,14 @@
                 </div>
             </div>
 
-            <!-- GRID POTONGAN MINGGUAN -->
             <div class="grid-2" style="margin-bottom: 12px;">
                 <div class="mini-card">
                     <div class="mini-label">Minggu Ini</div>
-                    <div class="val-green" id="gridMingguIni">Rp. 0 (0x)</div>
+                    <div class="val-blue" id="gridMingguIni">Rp. 0 (0x)</div>
                 </div>
                 <div class="mini-card">
                     <div class="mini-label">Minggu Kemarin</div>
-                    <div class="val-blue">Rp. 54,080 (40x)</div>
+                    <div class="val-blue">Rp. 0 (0x)</div>
                 </div>
                 <div class="mini-card">
                     <div class="mini-label">Minggu -2</div>
@@ -432,7 +418,6 @@
                 </div>
             </div>
 
-            <!-- TARGET ORDER MINGGUAN -->
             <div class="card">
                 <div class="card-title">Target Order Mingguan</div>
                 <div class="grid-2">
@@ -442,7 +427,7 @@
                     </div>
                     <div class="mini-card">
                         <div class="mini-label">Minggu Kemarin</div>
-                        <div class="target-green">40/35 Order</div>
+                        <div class="target-red">0/35 Order</div>
                     </div>
                     <div class="mini-card">
                         <div class="mini-label">Minggu -2</div>
@@ -455,12 +440,12 @@
                 </div>
             </div>
 
-            <div class="banner-yellow">COD BOY DELIVERY</div>
+            <div class="banner-yellow">S O P BLUE DELIVERY</div>
 
         </div>
     </div>
 
-    <!-- ==================== BOTTOM NAVIGATION BAR ==================== -->
+    <!-- BOTTOM NAVIGATION -->
     <div class="bottom-nav">
         <div class="nav-item active" id="nav-home" onclick="switchTab('home')">
             <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
@@ -479,7 +464,6 @@
 </div>
 
 <script>
-    // FUNGSI PERPINDAHAN TAB / MENU
     function switchTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -487,11 +471,9 @@
         document.getElementById('tab-' + tabName).classList.add('active');
         document.getElementById('nav-' + tabName).classList.add('active');
         
-        // Scroll otomatis ke paling atas saat berganti tab
         window.scrollTo(0, 0);
     }
 
-    // VARIABLE DATA TRANSAKSI REALTIME
     let totalOrderan = 0;
     let totalOmset = 0;
     let riwayatList = [];
@@ -510,20 +492,17 @@
         let harga = parseInt(document.getElementById('hargaProduk').value, 10) || 0;
         let produk = document.getElementById('namaProduk').value || "Produk Makanan";
 
-        // Fitur kalkulasi opsional
         let cesHujan = document.getElementById('cesHujan').checked ? 3000 : 0;
         let dorongMotor = document.getElementById('dorongMotor').checked ? 10000 : 0;
         let parkir = parseInt(document.getElementById('biayaParkir').value, 10) || 0;
         
         let subtotal = harga + cesHujan + dorongMotor + parkir;
 
-        // 1. Tambah Statistik
         totalOrderan += 1;
         totalOmset += subtotal;
 
-        let potonganAdmin = Math.round(totalOmset * 0.12); // Contoh hitung potongan 12%
+        let potonganAdmin = Math.round(totalOmset * 0.12);
 
-        // 2. Update Tampilan Tab Akun
         document.getElementById('statOrderan').innerText = totalOrderan;
         document.getElementById('statPendapatan').innerText = "Rp. " + totalOmset.toLocaleString('id-ID');
         document.getElementById('statPotonganAdmin').innerText = "Rp. " + potonganAdmin.toLocaleString('id-ID');
@@ -533,7 +512,6 @@
 
         document.getElementById('gridMingguIni').innerText = `Rp. ${potonganAdmin.toLocaleString('id-ID')} (${totalOrderan}x)`;
 
-        // Update Target Order Mingguan
         let targetElem = document.getElementById('targetMingguIni');
         targetElem.innerText = `${totalOrderan}/${TARGET_ORDER} Order`;
         
@@ -543,17 +521,16 @@
             targetElem.className = "target-red";
         }
 
-        // 3. Tambah ke Tab History
         riwayatList.push(`• ${produk} - Rp ${subtotal.toLocaleString('id-ID')}`);
         document.getElementById('listRiwayat').innerHTML = riwayatList.join('<br>');
 
-        // Reset Input
         document.getElementById('namaProduk').value = '';
         document.getElementById('hargaProduk').value = '';
         
-        alert("Orderan berhasil dicatat! Cek statistik di menu Akun.");
+        alert("Orderan berhasil dicatat!");
     }
 </script>
 
 </body>
-</html>
+                            </html>
+                            
