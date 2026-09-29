@@ -1,344 +1,276 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blue Delivery - Laporan Kurir</title>
-    <script>
-        function pindahHalaman(halaman) {
-            var pages = document.querySelectorAll('.page');
-            for(var i = 0; i < pages.length; i++) {
-                pages[i].classList.remove('active');
-            }
-            var navs = document.querySelectorAll('.nav-item');
-            for(var j = 0; j < navs.length; j++) {
-                navs[j].classList.remove('active-nav');
-            }
-            var targetPage = document.getElementById('page-' + halaman);
-            var targetNav = document.getElementById('nav-' + halaman);
-            if(targetPage) targetPage.classList.add('active');
-            if(targetNav) targetNav.classList.add('active-nav');
-
-            if(halaman === 'history') {
-                renderHistory();
-            }
-        }
-    </script>
-    <style>
-        * { box-sizing: border-box; font-family: Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: #f4f4f4; margin: 0; padding: 0; padding-bottom: 80px; }
-        .header { background-color: #1e88e5; color: white; padding: 15px; font-size: 18px; font-weight: bold; text-align: center; }
-        .container { padding: 12px; }
-        .page { display: none; }
-        .page.active { display: block !important; }
-        .warning-box { background-color: #fff; padding: 12px; margin-bottom: 15px; border-radius: 5px; color: #333; font-size: 12px; font-weight: bold; text-align: center; border: 1px dashed #e74c3c; }
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 13px; font-weight: bold; color: #444; margin-bottom: 5px; }
-        .form-control { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; background: #fff; }
-        .input-gps-wrapper { display: flex; gap: 6px; }
-        .btn-gps { background-color: #26a69a; color: white; border: none; padding: 0 12px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; white-space: nowrap; }
-        .row { display: flex; gap: 10px; }
-        .row .form-group { flex: 1; }
-        .btn-add { background-color: #1565c0; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; font-size: 14px; }
-        .btn-submit { background-color: #1e88e5; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; font-size: 15px; margin-top: 10px; }
-        .product-list { background: #fff; padding: 10px; border-radius: 5px; margin-top: 10px; margin-bottom: 15px; border: 1px solid #ddd; }
-        .product-item { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; border-bottom: 1px dashed #eee; }
-        .summary-box { background: #e3f2fd; padding: 12px; border-radius: 5px; border: 1px solid #bbdefb; margin-top: 15px; }
-        .summary-box h3 { margin: 0 0 8px 0; font-size: 15px; color: #1565c0; }
-        .summary-item { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
-        .summary-total { font-weight: bold; font-size: 15px; border-top: 1px solid #90caf9; padding-top: 6px; margin-top: 6px; color: #0d47a1; }
-        .nav-bottom { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background-color: #ffffff; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #ddd; box-shadow: 0 -2px 6px rgba(0,0,0,0.1); z-index: 9999; }
-        .nav-item { text-align: center; font-size: 11px; color: #777; cursor: pointer; flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .nav-item.active-nav { color: #1e88e5; font-weight: bold; }
-        .profile-header { text-align: center; padding: 10px 0 15px 0; }
-        .profile-logo { width: 70px; height: 70px; border-radius: 50%; background-color: #1e88e5; color: white; font-size: 32px; font-weight: bold; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
-        .sop-box { background: #fff; border-radius: 6px; overflow: hidden; margin-top: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-        .sop-header { background: #ffb703; color: #000; font-weight: bold; text-align: center; padding: 8px; font-size: 13px; }
-        .sop-body { padding: 12px; font-size: 12px; color: #333; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laporan Blue Delivery</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #f4f6f8;
+      padding-bottom: 70px;
+    }
+    .header {
+      background-color: #1e88e5;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .container {
+      padding: 15px;
+      max-width: 500px;
+      margin: auto;
+    }
+    .page {
+      display: none;
+    }
+    .active {
+      display: block;
+    }
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
+    }
+    label {
+      font-weight: bold;
+      font-size: 13px;
+      display: block;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    .btn {
+      background-color: #1e88e5;
+      color: white;
+      border: none;
+      padding: 12px;
+      width: 100%;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    .btn-add {
+      background-color: #2196F3;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    .autocomplete-wrapper {
+      position: relative;
+    }
+    .suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ccc;
+      border-top: none;
+      z-index: 1000;
+      max-height: 150px;
+      overflow-y: auto;
+      border-radius: 0 0 5px 5px;
+    }
+    .suggestion-item {
+      padding: 8px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+    }
+    .suggestion-item:hover {
+      background-color: #e3f2fd;
+    }
+    .product-row {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 5px;
+    }
+    .navbar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      border-top: 1px solid #ddd;
+    }
+    .nav-item {
+      text-align: center;
+      color: #777;
+      font-size: 12px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .nav-item.active-nav {
+      color: #1e88e5;
+      font-weight: bold;
+    }
+    .avatar {
+      width: 60px;
+      height: 60px;
+      background: #2196f3;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin: 10px auto;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="header">Laporan Blue Delivery</div>
+  <div class="header">Laporan Blue Delivery</div>
 
-    <!-- HALAMAN HOME -->
-    <div id="page-home" class="page active container">
-        <div class="warning-box">
-            PROSES ANTAR BARANG WAJIB DICEK DAN LEBIH TELITI! HINDARI BARANG MELANGGAR HUKUM DAN AGAMA.
+  <div class="container">
+    <!-- HOME PAGE -->
+    <div id="page-home" class="page active">
+      <div class="card">
+        <label>Rincian Produk</label>
+        <div id="product-list">
+          <div class="product-row">
+            <input type="text" placeholder="Harga Produk Cth. 5000" class="prod-price">
+            <input type="number" placeholder="Jumlah" class="prod-qty">
+          </div>
+        </div>
+        <button type="button" class="btn btn-add" onclick="addProductRow()">+ Tambah Produk</button>
+
+        <!-- Lokasi Pembelian dengan Autocomplete -->
+        <label>>> Lokasi Pembelian</label>
+        <div class="autocomplete-wrapper">
+          <input type="text" id="lokasi-beli" placeholder="Ketik lokasi (contoh: Lamongan)" oninput="searchLocation(this, 'sug-beli')">
+          <div id="sug-beli" class="suggestions"></div>
         </div>
 
-        <div class="form-group">
-            <label>>> Jenis Orderan</label>
-            <select id="jenisOrder" class="form-control">
-                <option value="Antar / Belanja Barang">Pilih Jenis Orderan</option>
-                <option value="Belanja Makanan">Belanja Makanan</option>
-                <option value="Antar Paket / Barang">Antar Paket / Barang</option>
-                <option value="Jasa Layanan">Jasa Layanan</option>
-            </select>
+        <!-- Lokasi Pengiriman dengan Autocomplete -->
+        <label>>> Lokasi Pengiriman / Tujuan</label>
+        <div class="autocomplete-wrapper">
+          <input type="text" id="lokasi-tujuan" placeholder="Ketik lokasi tujuan" oninput="searchLocation(this, 'sug-tujuan')">
+          <div id="sug-tujuan" class="suggestions"></div>
         </div>
 
-        <div class="form-group">
-            <label>>> Produk</label>
-            <input type="text" id="prodNama" class="form-control" placeholder="Nama Produk / Jasa">
-        </div>
+        <label>Jarak (Km)</label>
+        <input type="number" id="jarak" placeholder="Jarak dalam Km (cth: 3.5)" oninput="hitungTarif()">
 
-        <div class="row">
-            <div class="form-group">
-                <input type="number" id="prodHarga" class="form-control" placeholder="Harga Produk Cth. 5000">
-            </div>
-            <div class="form-group">
-                <input type="number" id="prodJumlah" class="form-control" placeholder="Jumlah Produk">
-            </div>
-        </div>
+        <label>Tarif Per Km (Rp)</label>
+        <input type="number" id="tarif-per-km" value="3000" oninput="hitungTarif()">
 
-        <button class="btn-add" onclick="tambahProduk()">Tambah Produk</button>
+        <label>Total Ongkir (Rp)</label>
+        <input type="number" id="total-ongkir" readonly>
 
-        <div id="daftarProdukBox" class="product-list" style="display:none;">
-            <strong>Daftar Item:</strong>
-            <div id="daftarProduk"></div>
-        </div>
-
-        <hr style="margin: 15px 0; border: 0; border-top: 1px solid #ddd;">
-
-        <div class="form-group">
-            <label>>> Lokasi Pembelian</label>
-            <div class="input-gps-wrapper">
-                <input type="text" id="lokasiBeli" class="form-control" placeholder="Cari lokasi..">
-                <button type="button" class="btn-gps" onclick="ambilLokasi('lokasiBeli')">📍 Lokasi Saya</button>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>>> Lokasi Antar</label>
-            <div class="input-gps-wrapper">
-                <input type="text" id="lokasiAntar" class="form-control" placeholder="Cari lokasi..">
-                <button type="button" class="btn-gps" onclick="ambilLokasi('lokasiAntar')">📍 Lokasi Saya</button>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="form-group">
-                <label>>> Ongkir</label>
-                <input type="number" id="ongkir" class="form-control" value="0" oninput="hitungTotal()">
-            </div>
-            <div class="form-group">
-                <label>>> Cas Modal</label>
-                <input type="number" id="casModal" class="form-control" value="0" oninput="hitungTotal()">
-            </div>
-        </div>
-
-        <div class="summary-box">
-            <h3>Ringkasan Biaya</h3>
-            <div class="summary-item"><span>Total Harga Barang:</span> <span id="lblTotalBarang">Rp 0</span></div>
-            <div class="summary-item"><span>Ongkir / Biaya Antar:</span> <span id="lblOngkir">Rp 0</span></div>
-            <div class="summary-item"><span>Cas Modal:</span> <span id="lblCasModal">Rp 0</span></div>
-            <div class="summary-item summary-total"><span>TOTAL BAYAR:</span> <span id="lblGrandTotal">Rp 0</span></div>
-        </div>
-
-        <div class="form-group" style="margin-top: 10px;">
-            <label>>> Nomor WA Customer (Opsional)</label>
-            <input type="text" id="noWA" class="form-control" placeholder="Contoh: 628123456789">
-        </div>
-
-        <button class="btn-submit" onclick="selesaiOrder()">Selesaikan Order & Kirim Nota</button>
+        <button class="btn" onclick="simpanOrder()">Simpan Laporan</button>
+      </div>
     </div>
 
-    <!-- HALAMAN HISTORY -->
-    <div id="page-history" class="page container">
-        <h3>Riwayat Transaksi</h3>
-        <div id="historyList">Belum ada riwayat orderan.</div>
+    <!-- HISTORY PAGE -->
+    <div id="page-history" class="page">
+      <div class="card">
+        <h3>Riwayat Laporan</h3>
+        <div id="history-list" style="margin-top: 10px; font-size: 14px;">Belum ada riwayat.</div>
+      </div>
     </div>
 
-    <!-- HALAMAN AKUN PENGGUNA -->
-    <div id="page-account" class="page container">
-        <div class="profile-header">
-            <div class="profile-logo">M</div>
-            <h3 style="margin: 5px 0;">PROFILE PENGGUNA</h3>
-            <strong>MUSTOFA</strong><br>
-            <small style="color: #666;">mustofadriverboy@gmail.com</small>
-        </div>
-
-        <div class="sop-box">
-            <div class="sop-header">SOP BLUE DELIVERY</div>
-            <div class="sop-body">
-                <ol style="padding-left: 18px; margin: 0;">
-                    <li>Wajib beratribut setiap hari</li>
-                    <li>Setoran wajib hari Senin</li>
-                    <li>Wajib share nota ke admin dan customer</li>
-                </ol>
-            </div>
-        </div>
+    <!-- AKUN PAGE -->
+    <div id="page-akun" class="page">
+      <div class="card" style="text-align: center;">
+        <div class="avatar">M</div>
+        <h3>PROFILE PENGGUNA</h3>
+        <p><b>MUSTOFA</b></p>
+        <p style="font-size: 12px; color: #666;">mustofadriverboy@gmail.com</p>
+      </div>
+      <div class="card" style="background: #fff8e1; border-left: 4px solid #ffb300;">
+        <h4 style="color: #b78103;">SOP BLUE DELIVERY</h4>
+        <ol style="margin-left: 20px; margin-top: 5px; font-size: 13px;">
+          <li>Wajib beratribut setiap hari</li>
+          <li>Setoran wajib hari Senin</li>
+          <li>Wajib share nota ke admin dan customer</li>
+        </ol>
+      </div>
     </div>
+  </div>
 
-    <!-- NAVBAR BOTTOM -->
-    <div class="nav-bottom">
-        <div id="nav-home" class="nav-item active-nav" onclick="pindahHalaman('home')">🏠 Home</div>
-        <div id="nav-history" class="nav-item" onclick="pindahHalaman('history')">🕒 History</div>
-        <div id="nav-account" class="nav-item" onclick="pindahHalaman('account')">👤 Akun</div>
-    </div>
+  <!-- NAVBAR BOTTOM -->
+  <div class="navbar">
+    <div class="nav-item active-nav" onclick="switchPage('home', this)">🏠<br>Home</div>
+    <div class="nav-item" onclick="switchPage('history', this)">🕒<br>History</div>
+    <div class="nav-item" onclick="switchPage('akun', this)">👤<br>Akun</div>
+  </div>
 
-    <script>
-        let listBarang = [];
-        let totalBarang = 0;
-        let grandTotal = 0;
+  <script>
+    function switchPage(pageId, el) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
+      document.getElementById('page-' + pageId).classList.add('active');
+      el.classList.add('active-nav');
+    }
 
-        // MASUKKAN LINK GOOGLE SCRIPT ADMIN DI SINI
-        const URL_GOOGLE_SCRIPT = "ISI_DENGAN_URL_GOOGLE_SCRIPT_ANDA";
+    function addProductRow() {
+      const div = document.createElement('div');
+      div.className = 'product-row';
+      div.innerHTML = `<input type="text" placeholder="Harga Produk Cth. 5000" class="prod-price"><input type="number" placeholder="Jumlah" class="prod-qty">`;
+      document.getElementById('product-list').appendChild(div);
+    }
 
-        // Fitur Deteksi Lokasi Otomatis (GPS)
-        function ambilLokasi(targetInputId) {
-            const inputField = document.getElementById(targetInputId);
-            if (!navigator.geolocation) {
-                alert("Browser HP Anda tidak mendukung deteksi lokasi otomatis.");
-                return;
-            }
+    function hitungTarif() {
+      const jarak = parseFloat(document.getElementById('jarak').value) || 0;
+      const tarifPerKm = parseFloat(document.getElementById('tarif-per-km').value) || 0;
+      document.getElementById('total-ongkir').value = Math.round(jarak * tarifPerKm);
+    }
 
-            inputField.value = "Mencari lokasi GPS...";
+    // Fungsi Autocomplete Alamat Gratis (OpenStreetMap API)
+    let timer;
+    function searchLocation(inputEl, suggestionId) {
+      clearTimeout(timer);
+      const query = inputEl.value;
+      const sugBox = document.getElementById(suggestionId);
+      
+      if (query.length < 3) {
+        sugBox.innerHTML = '';
+        return;
+      }
 
-            navigator.geolocation.getCurrentPosition(
-                function (position) {
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-
-                    // Mengambil nama alamat menggunakan Nominatim OpenStreetMap (Gratis)
-                    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data && data.display_name) {
-                                inputField.value = data.display_name;
-                            } else {
-                                inputField.value = `${lat}, ${lon}`;
-                            }
-                        })
-                        .catch(err => {
-                            inputField.value = `${lat}, ${lon}`;
-                        });
-                },
-                function (error) {
-                    alert("Gagal mendeteksi lokasi. Pastikan GPS HP Anda sudah aktif.");
-                    inputField.value = "";
-                },
-                { enableHighAccuracy: true, timeout: 10000 }
-            );
-        }
-
-        function tambahProduk() {
-            const nama = document.getElementById('prodNama').value;
-            const harga = parseFloat(document.getElementById('prodHarga').value) || 0;
-            const jumlah = parseInt(document.getElementById('prodJumlah').value) || 1;
-
-            if(!nama || harga <= 0) {
-                alert("Isi nama produk dan harga terlebih dahulu!");
-                return;
-            }
-
-            const subtotal = harga * jumlah;
-            listBarang.push({ nama, harga, jumlah, subtotal });
-
-            document.getElementById('prodNama').value = '';
-            document.getElementById('prodHarga').value = '';
-            document.getElementById('prodJumlah').value = '';
-
-            renderProduk();
-            hitungTotal();
-        }
-
-        function renderProduk() {
-            const box = document.getElementById('daftarProdukBox');
-            const container = document.getElementById('daftarProduk');
-            container.innerHTML = '';
-            totalBarang = 0;
-
-            if(listBarang.length > 0) box.style.display = 'block';
-            else box.style.display = 'none';
-
-            listBarang.forEach((item) => {
-                totalBarang += item.subtotal;
-                container.innerHTML += `<div class="product-item"><span>${item.nama} (${item.jumlah}x)</span><span>Rp ${item.subtotal.toLocaleString('id-ID')}</span></div>`;
+      timer = setTimeout(() => {
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=id&limit=5`)
+          .then(res => res.json())
+          .then(data => {
+            sugBox.innerHTML = '';
+            data.forEach(item => {
+              const div = document.createElement('div');
+              div.className = 'suggestion-item';
+              div.innerText = item.display_name;
+              div.onclick = () => {
+                inputEl.value = item.display_name;
+                sugBox.innerHTML = '';
+              };
+              sugBox.appendChild(div);
             });
-        }
+          })
+          .catch(err => console.log(err));
+      }, 400);
+    }
 
-        function hitungTotal() {
-            const ongkir = parseFloat(document.getElementById('ongkir').value) || 0;
-            const casModal = parseFloat(document.getElementById('casModal').value) || 0;
-            grandTotal = totalBarang + ongkir + casModal;
-
-            document.getElementById('lblTotalBarang').innerText = 'Rp ' + totalBarang.toLocaleString('id-ID');
-            document.getElementById('lblOngkir').innerText = 'Rp ' + ongkir.toLocaleString('id-ID');
-            document.getElementById('lblCasModal').innerText = 'Rp ' + casModal.toLocaleString('id-ID');
-            document.getElementById('lblGrandTotal').innerText = 'Rp ' + grandTotal.toLocaleString('id-ID');
-        }
-
-        function selesaiOrder() {
-            const jenis = document.getElementById('jenisOrder').value;
-            const beli = document.getElementById('lokasiBeli').value || '-';
-            const antar = document.getElementById('lokasiAntar').value || '-';
-            const noWA = document.getElementById('noWA').value;
-
-            if(listBarang.length === 0 && grandTotal === 0) {
-                alert("Masukkan detail order terlebih dahulu!");
-                return;
-            }
-
-            const orderData = {
-                tgl: new Date().toLocaleString('id-ID'),
-                jenis: jenis,
-                beli: beli,
-                antar: antar,
-                detail: listBarang.map(i => `${i.nama} (${i.jumlah}x)`).join(', ') || 'Tanpa Rincian',
-                total: grandTotal
-            };
-
-            try {
-                let history = JSON.parse(localStorage.getItem('blueDeliveryHistory')) || [];
-                history.unshift(orderData);
-                localStorage.setItem('blueDeliveryHistory', JSON.stringify(history));
-            } catch(e) {}
-
-            if(URL_GOOGLE_SCRIPT && URL_GOOGLE_SCRIPT !== "ISI_DENGAN_URL_GOOGLE_SCRIPT_ANDA") {
-                fetch(URL_GOOGLE_SCRIPT, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(orderData)
-                });
-            }
-
-            alert("Order berhasil disimpan!");
-            listBarang = [];
-            renderProduk();
-            hitungTotal();
-
-            if(noWA) {
-                let itemText = listBarang.map(i => `- ${i.nama} x${i.jumlah} = Rp ${i.subtotal.toLocaleString('id-ID')}`).join('\n');
-                let pesan = `*NOTA BLUE DELIVERY*\n------------------------------\nJenis: ${jenis}\nTotal: Rp ${grandTotal.toLocaleString('id-ID')}\n------------------------------\nTerima kasih!`;
-                window.open(`https://wa.me/${noWA}?text=${encodeURIComponent(pesan)}`, '_blank');
-            }
-        }
-
-        function renderHistory() {
-            let container = document.getElementById('historyList');
-            container.innerHTML = '';
-            try {
-                let history = JSON.parse(localStorage.getItem('blueDeliveryHistory')) || [];
-                if(history.length === 0) {
-                    container.innerHTML = 'Belum ada riwayat orderan.';
-                    return;
-                }
-                history.forEach(h => {
-                    container.innerHTML += `
-                        <div style="background:#fff; padding:10px; border-radius:5px; margin-bottom:10px; border-left:4px solid #1e88e5; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
-                            <small style="color:#888;">${h.tgl}</small><br>
-                            <strong>${h.jenis}</strong><br>
-                            <span style="font-size:13px; color:#555;">${h.detail}</span><br>
-                            <strong style="color:#1e88e5;">Total: Rp ${h.total.toLocaleString('id-ID')}</strong>
-                        </div>
-                    `;
-                });
-            } catch(e) {
-                container.innerHTML = 'Belum ada riwayat orderan.';
-            }
-        }
-    </script>
+    function simpanOrder() {
+      alert("Laporan berhasil disimpan!");
+    }
+  </script>
 </body>
 </html>
