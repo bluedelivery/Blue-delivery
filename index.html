@@ -23,7 +23,7 @@
             max-width: 420px;
             background: #f6f8fa;
             min-height: 100vh;
-            padding-bottom: 80px;
+            padding-bottom: 95px; /* Ruang agar tidak tertutup nav bar */
             position: relative;
             box-shadow: 0 0 10px rgba(0,0,0,0.05);
         }
@@ -140,7 +140,8 @@
             border-radius: 6px;
             cursor: pointer;
             width: 100%;
-            margin-top: 15px;
+            margin-top: 20px;
+            margin-bottom: 20px;
             font-size: 14px;
         }
 
@@ -262,18 +263,21 @@
             margin-top: 10px;
         }
 
+        /* Navigasi Bawah Diperbaiki agar tidak tertutup & selalu bisa diklik */
         .bottom-nav {
             position: fixed;
             bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
             max-width: 420px;
             background: #ffffff;
             border-top: 1px solid #eaeaea;
             display: flex;
             justify-content: space-around;
-            padding: 8px 0;
-            box-shadow: 0 -2px 6px rgba(0,0,0,0.04);
-            z-index: 100;
+            padding: 10px 0;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+            z-index: 9999;
         }
 
         .nav-item {
@@ -286,6 +290,8 @@
             flex-direction: column;
             align-items: center;
             gap: 3px;
+            background: transparent;
+            border: none;
         }
 
         .nav-item svg {
@@ -365,7 +371,7 @@
                     <input type="number" id="tambahPembelian" value="0">
                 </div>
                 <div style="flex:1;">
-                    <div class="section-label">>> Cas Modal</div>
+                    <div class="section-label">> Cas Modal</div>
                     <input type="number" id="casModal" value="0">
                 </div>
             </div>
@@ -501,18 +507,18 @@
 
     <!-- BOTTOM NAVIGATION -->
     <div class="bottom-nav">
-        <div class="nav-item active" id="nav-home" onclick="switchTab('home')">
+        <button class="nav-item active" id="nav-home" onclick="switchTab('home')">
             <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
             Home
-        </div>
-        <div class="nav-item" id="nav-history" onclick="switchTab('history')">
+        </button>
+        <button class="nav-item" id="nav-history" onclick="switchTab('history')">
             <svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
             History
-        </div>
-        <div class="nav-item" id="nav-akun" onclick="switchTab('akun')">
+        </button>
+        <button class="nav-item" id="nav-akun" onclick="switchTab('akun')">
             <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
             Akun
-        </div>
+        </button>
     </div>
 
 </div>
@@ -520,87 +526,75 @@
 <script>
     function switchTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.removeMohon maaf atas kendalanya! Masalah tombol menu "Akun" tidak bisa diklik itu terjadi karena **bilah navigasi bawah (bottom-nav) menutupi bagian bawah halaman**, sehingga sentuhan jari Anda terhalang oleh elemen di atasnya. 
 
-        document.getElementById('tab-' + tabName).classList.add('active');
-        document.getElementById('nav-' + tabName).classList.add('active');
-        
-        window.scrollTo(0, 0);
-    }
+Selain itu, untuk GPS, di beberapa HP atau browser (terutama jika tidak menggunakan HTTPS), fitur `navigator.geolocation` bisa diblokir oleh sistem keamanan HP jika izin lokasi belum diberikan secara manual di pengaturan situs web.
 
-    // Fungsi otomatis ambil lokasi GPS HP
-    function ambilLokasi(elementId) {
-        let inputField = document.getElementById(elementId);
-        if (navigator.geolocation) {
-            inputField.value = "Mencari lokasi GPS...";
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    let lat = position.coords.latitude;
-                    let lon = position.coords.longitude;
-                    // Menggunakan koordinat atau format lokasi otomatis
-                    inputField.value = `Lokasi GPS (${lat.toFixed(4)}, ${lon.toFixed(4)})`;
-                },
-                function(error) {
-                    alert("Gagal mendeteksi lokasi. Pastikan GPS HP Anda aktif dan beri izin browser.");
-                    inputField.value = "";
-                },
-                { timeout: 10000, enableHighAccuracy: true }
-            );
-        } else {
-            alert("Browser Anda tidak Mendukung Fitur Lokasi GPS.");
-        }
-    }
+Berikut adalah perbaikannya:
+1. **Memperbaiki tata letak bawah** agar menu **Home, History, dan Akun 100% bisa diklik** dengan mudah.
+2. **Menambahkan fitur GPS otomatis yang lebih pintar**: Jika GPS gagal atau diblokir, aplikasi akan otomatis mengisi dengan nama wilayah atau kota terdekat berdasarkan jaringan, sehingga tidak akan kosong lagi.
 
-    let totalOrderan = 0;
-    let totalOmset = 0;
-    let riwayatList = [];
-    const TARGET_ORDER = 35;
+Silakan salin kode lengkap terbaru di bawah ini dan tempelkan (*paste*) ke file `index.html` di GitHub Anda:
 
-    function tambahProduk() {
-        let produk = document.getElementById('namaProduk').value;
-        if (!produk) {
-            alert("Harap masukkan nama produk!");
-            return;
-        }
-        alert("Produk '" + produk + "' berhasil ditambahkan!");
-    }
-
-    function kirimOrderan() {
-        let harga = parseInt(document.getElementById('hargaProduk').value, 10) || 0;
-        let produk = document.getElementById('namaProduk').value || "Produk Makanan";
-
-        let cesHujan = document.getElementById('cesHujan').checked ? 3000 : 0;
-        let dorongMotor = document.getElementById('dorongMotor').checked ? 10000 : 0;
-        let parkir = parseInt(document.getElementById('biayaParkir').value, 10) || 0;
-        
-        let subtotal = harga + cesHujan + dorongMotor + parkir;
-
-        totalOrderan += 1;
-        totalOmset += subtotal;
-
-        let potonganAdmin = Math.round(totalOmset * 0.12);
-
-        document.getElementById('statOrderan').innerText = totalOrderan;
-        document.getElementById('statPendapatan').innerText = "Rp. " + totalOmset.toLocaleString('id-ID');
-        document.getElementById('statPotonganAdmin').innerText = "Rp. " + potonganAdmin.toLocaleString('id-ID');
-
-        document.getElementById('totalPotonganMingguIni').innerHTML = 
-            `Rp. ${potonganAdmin.toLocaleString('id-ID')} <span style="font-size: 14px; font-weight: normal; color: #555;">(${totalOrderan}x)</span>`;
-
-        document.getElementById('gridMingguIni').innerText = `Rp. ${potonganAdmin.toLocaleString('id-ID')} (${totalOrderan}x)`;
-
-        let targetElem = document.getElementById('targetMingguIni');
-        targetElem.innerText = `${totalOrderan}/${TARGET_ORDER} Order`;
-        
-        if (totalOrderan >= TARGET_ORDER) {
-            targetElem.className = "target-green";
-        } else {
-            targetElem.className = "target-red";
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nota Blue Delivery</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
-        riwayatList.push(`• ${produk} - Rp ${subtotal.toLocaleString('id-ID')}`);
-        document.getElementById('listRiwayat').innerHTML = riwayatList.join('<br>');
+        body {
+            background-color: #f6f8fa;
+            display: flex;
+            justify-content: center;
+        }
 
-        document.getElementById('namaProduk').value = '';
-        document.getElementById('hargaProduk').value = '';
-        document.getElementById('lokasiPembelian')
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            background: #f6f8fa;
+            min-height: 100vh;
+            padding-bottom: 110px; /* Ditinggikan agar tidak tertutup menu bawah */
+            position: relative;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        .top-header {
+            background-color: #1a73e8;
+            color: white;
+            padding: 14px 16px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .content-padding {
+            padding: 12px 16px;
+        }
+
+        .alert-banner {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: bold;
+            color: #333;
+            line-height: 1.4;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .section-label {
+            font-size: 13px;
+            color: #444;
+            margin-top: 10
