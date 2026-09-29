@@ -3,420 +3,139 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Laporan Blue Delivery</title>
+  <title>Blue Delivery - Sistem Kurir</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, Roboto, Arial, sans-serif;
-    }
-
-    body {
-      background-color: #f2f2f2;
-      padding-bottom: 75px;
-    }
-
-    /* Header Navigasi */
-    .header {
-      background-color: #2ecc71;
-      color: white;
-      padding: 14px 16px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    /* Pengumuman Atas */
-    .announcement {
-      background-color: #ffffff;
-      padding: 14px;
-      text-align: center;
-      font-size: 15px;
-      font-weight: 500;
-      color: #333;
-      line-height: 1.4;
-      border-bottom: 1px solid #e0e0e0;
-    }
-
-    /* Card Utama Form */
-    .card-container {
-      background-color: #ffffff;
-      margin: 10px;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    }
-
-    /* Label Judul Section */
-    .label {
-      color: #444;
-      font-size: 14px;
-      margin: 12px 0 6px 0;
-      font-weight: normal;
-    }
-
-    /* Input & Select Custom */
-    input[type="text"],
-    input[type="number"],
-    select {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #dcdcdc;
-      border-radius: 6px;
-      background-color: #ffffff;
-      font-size: 14px;
-      color: #333;
-      outline: none;
-    }
-
-    /* Input Lokasi dengan Tombol Clear (X) */
-    .autocomplete-wrapper {
-      position: relative;
-    }
-
-    .input-group-location {
-      display: flex;
-      align-items: center;
-    }
-
-    .input-group-location input {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-
-    .btn-clear {
-      background-color: #e2e8f0;
-      border: 1px solid #dcdcdc;
-      border-left: none;
-      padding: 10px 14px;
-      border-top-right-radius: 6px;
-      border-bottom-right-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      color: #333;
-    }
-
-    /* Daftar Saran Alamat Autocomplete (Pop-up Dropdown) */
-    .autocomplete-suggestions {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background-color: #ffffff;
-      border: 1px solid #adadad;
-      border-radius: 0 0 6px 6px;
-      max-height: 200px;
-      overflow-y: auto;
-      z-index: 99;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-      display: none;
-    }
-
-    .autocomplete-item {
-      padding: 10px 12px;
-      font-size: 13px;
-      border-bottom: 1px solid #eee;
-      cursor: pointer;
-      color: #222;
-      line-height: 1.4;
-    }
-
-    .autocomplete-item:hover {
-      background-color: #eef2f5;
-    }
-
-    .autocomplete-item strong {
-      background-color: #fef08a;
-    }
-
-    /* Layout Grid 2 Kolom */
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    /* Tombol Tambah Produk */
-    .btn-blue {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 9px 16px;
-      border-radius: 5px;
-      font-size: 14px;
-      cursor: pointer;
-      margin-top: 10px;
-      display: inline-block;
-    }
-
-    /* Group Checkbox Opsi */
-    .checkbox-group {
-      margin: 10px 0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      color: #444;
-    }
-
-    .checkbox-group input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-    }
-
-    .checkbox-group .highlight {
-      color: #2ecc71;
-      font-style: italic;
-      font-weight: bold;
-    }
-
-    /* Keterangan Customer */
-    .customer-note {
-      color: #007bff;
-      font-size: 14px;
-      font-weight: 500;
-      margin-top: 15px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    /* Bottom Navbar */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 60px;
-      background-color: #ffffff;
-      border-top: 1px solid #e0e0e0;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 100;
-    }
-
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #2ecc71;
-      font-size: 12px;
-      text-decoration: none;
-    }
-
-    .nav-item.inactive {
-      color: #888888;
-    }
-
-    .nav-icon {
-      font-size: 20px;
-      margin-bottom: 2px;
-    }
+    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f6f9; }
+    .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    h2 { color: #0056b3; text-align: center; }
+    label { font-weight: bold; display: block; margin-top: 10px; }
+    input, select, button { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    button { background-color: #0056b3; color: white; border: none; font-size: 16px; margin-top: 15px; cursor: pointer; }
+    button:hover { background-color: #003d80; }
+    .result { margin-top: 15px; padding: 10px; background: #e9ecef; border-radius: 4px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #0056b3; color: white; }
   </style>
 </head>
 <body>
 
-  <!-- Header Top -->
-  <div class="header">
-    Laporan Blue Delivery
+<div class="container">
+  <h2>Blue Delivery</h2>
+  
+  <label for="courierName">Nama Kurir:</label>
+  <input type="text" id="courierName" placeholder="Masukkan nama kurir">
+
+  <label for="totalOmset">Total Omset Transaksi (Rp):</label>
+  <input type="number" id="totalOmset" placeholder="Contoh: 100000" oninput="calculateSalary()">
+
+  <label for="attendance">Uang Hadir Harian:</label>
+  <select id="attendance" onchange="calculateSalary()">
+    <option value="3000">Hadir (Rp 3.000)</option>
+    <option value="0">Tidak Hadir (Rp 0)</option>
+  </select>
+
+  <div class="result">
+    <p><strong>Komisi (12%):</strong> Rp <span id="commissionText">0</span></p>
+    <p><strong>Uang Hadir:</strong> Rp <span id="attendanceText">3000</span></p>
+    <p><strong>Total Gaji Diterima:</strong> Rp <span id="totalSalaryText">3000</span></p>
   </div>
 
-  <!-- Teks Peringatan Atas -->
-  <div class="announcement">
-    PROSES ANTAR BARANG WAJIB DICEK DAN LEBIH TELITI...!!! HINDARI BARANG MELANGGAR HUKUM DAN AGAMA..!
-  </div>
+  <button onclick="saveTransaction()">Simpan Transaksi</button>
 
-  <!-- Form Container / Kartu Isian -->
-  <div class="card-container">
+  <h3>Riwayat Transaksi</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Nama</th>
+        <th>Omset</th>
+        <th>Total Gaji</th>
+      </tr>
+    </thead>
+    <tbody id="historyTable">
+    </tbody>
+  </table>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+  // Konfigurasi Firebase Proyek Blue Delivery
+  const firebaseConfig = {
+    apiKey: "AIzaSyBJVK2_F5HKfIxbJbjQpGk",
+    authDomain: "blue-delivery-82637.firebaseapp.com",
+    databaseURL: "https://blue-delivery-82637-default-rtdb.firebaseio.com",
+    projectId: "blue-delivery-82637",
+    storageBucket: "blue-delivery-82637.firebasestorage.app",
+    messagingSenderId: "664784438256",
+    appId: "1:664784438256:web:0eb965a447",
+    measurementId: "G-SZF80TRJXF"
+  };
+
+  // Inisialisasi Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // Perhitungan Gaji Automatic
+  window.calculateSalary = function() {
+    const omset = parseFloat(document.getElementById('totalOmset').value) || 0;
+    const attendance = parseFloat(document.getElementById('attendance').value) || 0;
     
-    <!-- Checkbox Lokasi Searah -->
-    <div class="checkbox-group">
-      <input type="checkbox" id="searah">
-      <label for="searah">Lokasi Searah <span style="color: #777;">(Centang jika pembelian & antar searah)</span></label>
-    </div>
+    const commission = omset * 0.12;
+    const totalSalary = commission + attendance;
 
-    <!-- Jenis Orderan -->
-    <div class="label">&gt;&gt; Jenis Orderan</div>
-    <select>
-      <option value="">Pilih Jenis Orderan</option>
-      <option value="makanan">Makanan & Minuman</option>
-      <option value="barang">Barang / Paket</option>
-    </select>
+    document.getElementById('commissionText').innerText = commission.toLocaleString('id-ID');
+    document.getElementById('attendanceText').innerText = attendance.toLocaleString('id-ID');
+    document.getElementById('totalSalaryText').innerText = totalSalary.toLocaleString('id-ID');
 
-    <!-- Produk -->
-    <div class="label">&gt;&gt; Produk</div>
-    <input type="text" placeholder="Nama Produk / Jasa" style="margin-bottom: 8px;">
-    
-    <div class="grid-2">
-      <input type="number" placeholder="Harga Produk Cth. 5000">
-      <input type="number" placeholder="Jumlah Produk">
-    </div>
-    
-    <button class="btn-blue">Tambah Produk</button>
+    return { omset, commission, attendance, totalSalary };
+  };
 
-    <!-- Tambah T.Pembelian & Cas Modal -->
-    <div class="grid-2" style="margin-top: 10px;">
-      <div>
-        <div class="label">&gt;&gt; Tambah T.Pembelian</div>
-        <input type="number" value="0">
-      </div>
-      <div>
-        <div class="label">&gt;&gt; Cas Modal</div>
-        <input type="number" value="0">
-      </div>
-    </div>
-
-    <!-- Total Order Produk -->
-    <div class="label">&gt;&gt; Total Order Produk</div>
-    <input type="number" value="1">
-
-    <!-- Tambah T.Bersebelahan & Pindah T.Kosong/Tut -->
-    <div class="grid-2">
-      <div>
-        <div class="label">&gt; [+] Tambah T.Bersebelahan</div>
-        <input type="number" value="0">
-      </div>
-      <div>
-        <div class="label">&gt; Pindah T.Kosong/Tut</div>
-        <input type="number" value="0">
-      </div>
-    </div>
-
-    <!-- Ces Ronjot -->
-    <div class="label">&gt;&gt; Ces ronjot (Opsional)</div>
-    <input type="number" value="0">
-
-    <!-- Biaya Parkir -->
-    <div class="label">&gt;&gt; Biaya Parkir (Opsional)</div>
-    <input type="number" value="0">
-
-    <!-- Opsi Tambahan -->
-    <div class="checkbox-group" style="margin-top: 15px;">
-      <input type="checkbox" id="hujan">
-      <label for="hujan">Ces Hujan <span class="highlight">(+Rp, 3.000)</span></label>
-    </div>
-
-    <div class="checkbox-group">
-      <input type="checkbox" id="dorong">
-      <label for="dorong">Dorong Motor <span class="highlight">(+Rp, 10.000)</span></label>
-    </div>
-
-    <!-- Lokasi Pembelian dengan Autocomplete -->
-    <div class="label">&gt;&gt; Lokasi Pembelian</div>
-    <div class="autocomplete-wrapper">
-      <div class="input-group-location">
-        <input type="text" id="lokasi-beli" placeholder="Cari lokasi.." oninput="cariLokasi('lokasi-beli', 'suggest-beli')">
-        <button class="btn-clear" onclick="hapusInput('lokasi-beli', 'suggest-beli')">✖</button>
-      </div>
-      <div id="suggest-beli" class="autocomplete-suggestions"></div>
-    </div>
-
-    <!-- Lokasi Antar dengan Autocomplete -->
-    <div class="label">&gt;&gt; Lokasi Antar</div>
-    <div class="autocomplete-wrapper">
-      <div class="input-group-location">
-        <input type="text" id="lokasi-antar" placeholder="Cari lokasi.." oninput="cariLokasi('lokasi-antar', 'suggest-antar')">
-        <button class="btn-clear" onclick="hapusInput('lokasi-antar', 'suggest-antar')">✖</button>
-      </div>
-      <div id="suggest-antar" class="autocomplete-suggestions"></div>
-    </div>
-
-    <!-- Keterangan Tambahan -->
-    <div class="customer-note">
-      <span>›</span> Tambahkan Keterangan Customer
-    </div>
-
-  </div>
-
-  <!-- Bottom Navigation Bar -->
-  <div class="bottom-nav">
-    <a href="#" class="nav-item">
-      <span class="nav-icon">⌂</span>
-      <span>Home</span>
-    </a>
-    <a href="#" class="nav-item inactive">
-      <span class="nav-icon">🕒</span>
-      <span>History</span>
-    </a>
-    <a href="#" class="nav-item inactive">
-      <span class="nav-icon">👤</span>
-      <span>Aku</span>
-    </a>
-  </div>
-
-  <!-- Script Autocomplete Lokasi Gratis (Database Lokal) -->
-  <script>
-    // Database daftar nama daerah/desa (Bisa Anda tambah/edit sendiri secara gratis)
-    const databaseLokasi = [
-      "JANGGOL, JATIDROJOK, KEDUNGPRING, KABUPATEN LAMONGAN, JAWA TIMUR",
-      "MIRU, KEMBANGBAHU, KEMBANGBAHU, KABUPATEN LAMONGAN, JAWA TIMUR",
-      "RSMKL, SIDOKUMPUL, LAMONGAN, KABUPATEN LAMONGAN, JAWA TIMUR",
-      "PLAZA LAMONGAN, JETIS, KEC. LAMONGAN, KABUPATEN LAMONGAN, JAWA TIMUR",
-      "STASIUN LAMONGAN, SIDOKUMPUL, KEC. LAMONGAN, KABUPATEN LAMONGAN, JAWA TIMUR",
-      "ALUN-ALUN LAMONGAN, TUMENGGUNGAN, KEC. LAMONGAN, KABUPATEN LAMONGAN, JAWA TIMUR",
-      "RSUD DR. SOEGIRO, KEC. LAMONGAN, KABUPATEN LAMONGAN, JAWA TIMUR",
-      "TIKUNG, KEC. TIKUNG, KABUPATEN LAMONGAN, JAWA TIMUR",
-      "SUKODADI, KEC. SUKODADI, KABUPATEN LAMONGAN, JAWA TIMUR",
-      "BABAT, KEC. BABAT, KABUPATEN LAMONGAN, JAWA TIMUR",
-      "DEKET, KEC. DEKET, KABUPATEN LAMONGAN, JAWA TIMUR",
-      "PACIRAN, KEC. PACIRAN, KABUPATEN LAMONGAN, JAWA TIMUR",
-      "KARANGGENENG, KEC. KARANGGENENG, KABUPATEN LAMONGAN, JAWA TIMUR",
-      "MANTUP, KEC. MANTUP, KABUPATEN LAMONGAN, JAWA TIMUR"
-    ];
-
-    function cariLokasi(inputId, suggestId) {
-      const input = document.getElementById(inputId);
-      const suggestBox = document.getElementById(suggestId);
-      const query = input.value.trim().toUpperCase();
-
-      suggestBox.innerHTML = "";
-
-      if (query.length === 0) {
-        suggestBox.style.display = "none";
-        return;
-      }
-
-      // Cari kata kunci di database lokal
-      const hasil = databaseLokasi.filter(lokasi => lokasi.includes(query));
-
-      if (hasil.length > 0) {
-        hasil.forEach(lokasi => {
-          const item = document.createElement("div");
-          item.className = "autocomplete-item";
-          
-          // Efek sorot teks kuning pada kata kunci yang diketik
-          const reg = new RegExp(`(${query})`, 'gi');
-          item.innerHTML = `○ ${lokasi.replace(reg, '<strong>$1</strong>')}`;
-
-          item.onclick = function () {
-            input.value = lokasi;
-            suggestBox.style.display = "none";
-          };
-
-          suggestBox.appendChild(item);
-        });
-        suggestBox.style.display = "block";
-      } else {
-        suggestBox.style.display = "none";
-      }
+  // Simpan Data ke Firebase Realtime Database
+  window.saveTransaction = function() {
+    const courierName = document.getElementById('courierName').value;
+    if (!courierName) {
+      alert("Harap masukkan nama kurir!");
+      return;
     }
 
-    function hapusInput(inputId, suggestId) {
-      document.getElementById(inputId).value = "";
-      document.getElementById(suggestId).style.display = "none";
-    }
+    const { omset, commission, attendance, totalSalary } = window.calculateSalary();
 
-    // Menutup daftar saat mengklik area lain
-    document.addEventListener("click", function (e) {
-      if (!e.target.closest(".autocomplete-wrapper")) {
-        document.querySelectorAll(".autocomplete-suggestions").forEach(box => {
-          box.style.display = "none";
-        });
-      }
+    push(ref(db, 'transactions'), {
+      courierName: courierName,
+      omset: omset,
+      commission: commission,
+      attendance: attendance,
+      totalSalary: totalSalary,
+      timestamp: new Date().toISOString()
+    }).then(() => {
+      alert("Transaksi berhasil disimpan!");
+      document.getElementById('courierName').value = '';
+      document.getElementById('totalOmset').value = '';
+      window.calculateSalary();
+    }).catch((error) => {
+      alert("Gagal menyimpan: " + error.message);
     });
-  </script>
+  };
+
+  // Tampilkan Riwayat Realtime
+  onValue(ref(db, 'transactions'), (snapshot) => {
+    const historyTable = document.getElementById('historyTable');
+    historyTable.innerHTML = '';
+    
+    snapshot.forEach((childSnapshot) => {
+      const data = childSnapshot.val();
+      const row = `<tr>
+        <td>${data.courierName}</td>
+        <td>Rp ${data.omset.toLocaleString('id-ID')}</td>
+        <td>Rp ${data.totalSalary.toLocaleString('id-ID')}</td>
+      </tr>`;
+      historyTable.innerHTML = row + historyTable.innerHTML;
+    });
+  });
+</script>
 
 </body>
 </html>
