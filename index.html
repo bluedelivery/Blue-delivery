@@ -29,7 +29,7 @@
         }
 
         .top-header {
-            background-color: #1a73e8; /* Warna Biru Utama */
+            background-color: #1a73e8;
             color: white;
             padding: 14px 16px;
             font-size: 16px;
@@ -74,6 +74,29 @@
             background: #fff;
         }
 
+        .input-group-gps {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .input-group-gps input {
+            margin-bottom: 0;
+        }
+
+        .btn-gps {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 10px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
         .checkbox-container {
             display: flex;
             align-items: center;
@@ -109,7 +132,7 @@
         }
 
         .btn-primary-action {
-            background-color: #1a73e8; /* Diubah jadi Biru */
+            background-color: #1a73e8;
             color: white;
             font-weight: bold;
             border: none;
@@ -134,6 +157,26 @@
             font-weight: 600;
             color: #555;
             margin-bottom: 12px;
+        }
+
+        .profile-card {
+            background: linear-gradient(135deg, #1a73e8, #4285f4);
+            color: white;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .profile-info {
+            font-size: 13px;
+            opacity: 0.9;
         }
 
         .stat-row {
@@ -282,7 +325,6 @@
                 PROSES ANTAR BARANG WAJIB DICEK DAN LEBIH TELITI...!!! HINDARI BARANG MELANGGAR HUKUM DAN AGAMA..!
             </div>
 
-            <!-- URUTAN SESUAI PERMINTAAN ANDA -->
             <div class="section-label">>> Jenis Orderan</div>
             <select id="jenisOrder">
                 <option value="">Pilih Jenis Orderan</option>
@@ -301,10 +343,16 @@
             <button class="btn-blue" onclick="tambahProduk()">Tambah Produk</button>
 
             <div class="section-label">>> Lokasi Pembelian</div>
-            <input type="text" placeholder="Cari lokasi..">
+            <div class="input-group-gps">
+                <input type="text" id="lokasiPembelian" placeholder="Cari lokasi atau klik GPS..">
+                <button class="btn-gps" onclick="ambilLokasi('lokasiPembelian')">📍 GPS</button>
+            </div>
 
             <div class="section-label">>> Lokasi Antar</div>
-            <input type="text" placeholder="Cari lokasi..">
+            <div class="input-group-gps">
+                <input type="text" id="lokasiAntar" placeholder="Cari lokasi atau klik GPS..">
+                <button class="btn-gps" onclick="ambilLokasi('lokasiAntar')">📍 GPS</button>
+            </div>
 
             <label class="checkbox-container">
                 <input type="checkbox" id="lokasiSearah">
@@ -376,6 +424,12 @@
         <div class="top-header">Dashboard Rekap Kurir</div>
         <div class="content-padding">
             
+            <!-- PROFIL KURIR DI ATAS -->
+            <div class="profile-card">
+                <div class="profile-name">👤 Kurir Blue Delivery</div>
+                <div class="profile-info">ID Kurir: BD-001 | Status: Aktif 🟢</div>
+            </div>
+
             <div class="card">
                 <div class="card-title">Statistik Hari Ini</div>
                 <div class="stat-row">
@@ -474,6 +528,29 @@
         window.scrollTo(0, 0);
     }
 
+    // Fungsi otomatis ambil lokasi GPS HP
+    function ambilLokasi(elementId) {
+        let inputField = document.getElementById(elementId);
+        if (navigator.geolocation) {
+            inputField.value = "Mencari lokasi GPS...";
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    let lat = position.coords.latitude;
+                    let lon = position.coords.longitude;
+                    // Menggunakan koordinat atau format lokasi otomatis
+                    inputField.value = `Lokasi GPS (${lat.toFixed(4)}, ${lon.toFixed(4)})`;
+                },
+                function(error) {
+                    alert("Gagal mendeteksi lokasi. Pastikan GPS HP Anda aktif dan beri izin browser.");
+                    inputField.value = "";
+                },
+                { timeout: 10000, enableHighAccuracy: true }
+            );
+        } else {
+            alert("Browser Anda tidak Mendukung Fitur Lokasi GPS.");
+        }
+    }
+
     let totalOrderan = 0;
     let totalOmset = 0;
     let riwayatList = [];
@@ -526,11 +603,4 @@
 
         document.getElementById('namaProduk').value = '';
         document.getElementById('hargaProduk').value = '';
-        
-        alert("Orderan berhasil dicatat!");
-    }
-</script>
-
-</body>
-                            </html>
-                            
+        document.getElementById('lokasiPembelian')
