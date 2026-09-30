@@ -11,7 +11,6 @@
     <style>
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e5e7eb; z-index: 50; }
         #map-container { height: 250px; display: none; width: 100%; margin-top: 8px; border-radius: 8px; }
-        .page-hidden { display: none !important; }
     </style>
 </head>
 <body class="bg-gray-100 pb-24">
@@ -20,7 +19,7 @@
     <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg relative pb-16">
 
         <!-- ================= PAGE 1: MENU ================= -->
-        <div id="page-menu" class="page-content p-4">
+        <div id="page-menu" style="display: block;" class="p-4">
             <!-- Brand -->
             <div class="bg-green-600 text-white text-center py-3 rounded-lg font-bold text-xl tracking-wider shadow">
                 BLUE DELIVERY
@@ -111,7 +110,7 @@
         </div>
 
         <!-- ================= PAGE 2: RIWAYAT ================= -->
-        <div id="page-riwayat" class="page-content page-hidden p-4">
+        <div id="page-riwayat" style="display: none;" class="p-4">
             <h2 class="text-xl font-bold text-gray-800 mb-2 border-b pb-2">Riwayat Order</h2>
             <p class="text-xs text-gray-500 mb-4">Catatan: Riwayat hanya bisa dihapus oleh admin.</p>
             <div id="riwayat-list" class="space-y-3">
@@ -120,7 +119,7 @@
         </div>
 
         <!-- ================= PAGE 3: AKUN ================= -->
-        <div id="page-akun" class="page-content page-hidden p-4 space-y-4">
+        <div id="page-akun" style="display: none;" class="p-4 space-y-4">
             <!-- Profil Pengguna -->
             <div class="flex flex-col items-center bg-green-50 p-4 rounded-xl border border-green-200">
                 <div class="w-20 h-20 bg-green-600 text-white rounded-full flex items-center justify-center text-3xl font-bold shadow">
@@ -196,8 +195,11 @@
     <script>
         // --- NAVIGASI TAB ---
         function switchTab(tab) {
-            document.querySelectorAll('.page-content').forEach(el => el.classList.add('page-hidden'));
-            document.getElementById('page-' + tab).classList.remove('page-hidden');
+            document.getElementById('page-menu').style.display = 'none';
+            document.getElementById('page-riwayat').style.display = 'none';
+            document.getElementById('page-akun').style.display = 'none';
+
+            document.getElementById('page-' + tab).style.display = 'block';
 
             ['menu', 'riwayat', 'akun'].forEach(t => {
                 let btn = document.getElementById('nav-' + t);
@@ -403,5 +405,4 @@
                 htmlRiwayat = `<p class="text-sm text-gray-400 text-center py-6">Belum ada riwayat tersimpan.</p>`;
             }
 
-            document.getElementById('riwayat-list').innerHTML = htmlRiwayat;
-   
+            
