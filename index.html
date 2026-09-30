@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BLUE DELIVERY</title>
-    <!-- Tailwind CSS untuk Styling Cepat & Modern -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Leaflet CSS untuk Peta -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e5e7eb; z-index: 50; }
         #map-container { height: 250px; display: none; width: 100%; margin-top: 8px; border-radius: 8px; }
+        .page-hidden { display: none !important; }
     </style>
 </head>
-<body class="bg-gray-100 pb-20">
+<body class="bg-gray-100 pb-24">
 
     <!-- CONTAINER UTAMA -->
     <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg relative pb-16">
@@ -110,17 +111,16 @@
         </div>
 
         <!-- ================= PAGE 2: RIWAYAT ================= -->
-        <div id="page-riwayat" class="page-content p-4 hidden">
-            <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Riwayat Order</h2>
-            <p class="text-xs text-gray-500 mb-3">Catatan: Riwayat hanya bisa dihapus oleh admin.</p>
+        <div id="page-riwayat" class="page-content page-hidden p-4">
+            <h2 class="text-xl font-bold text-gray-800 mb-2 border-b pb-2">Riwayat Order</h2>
+            <p class="text-xs text-gray-500 mb-4">Catatan: Riwayat hanya bisa dihapus oleh admin.</p>
             <div id="riwayat-list" class="space-y-3">
-                <!-- Data riwayat akan masuk ke sini secara dinamis -->
                 <p class="text-sm text-gray-400 text-center py-6">Belum ada riwayat tersimpan.</p>
             </div>
         </div>
 
         <!-- ================= PAGE 3: AKUN ================= -->
-        <div id="page-akun" class="page-content p-4 space-y-4">
+        <div id="page-akun" class="page-content page-hidden p-4 space-y-4">
             <!-- Profil Pengguna -->
             <div class="flex flex-col items-center bg-green-50 p-4 rounded-xl border border-green-200">
                 <div class="w-20 h-20 bg-green-600 text-white rounded-full flex items-center justify-center text-3xl font-bold shadow">
@@ -177,7 +177,7 @@
         </div>
 
         <!-- ================= NAVIGATION BAR BAWAH ================= -->
-        <div class="bottom-nav flex justify-around py-3">
+        <div class="bottom-nav flex justify-around py-3 bg-white">
             <button onclick="switchTab('menu')" id="nav-menu" class="flex flex-col items-center text-green-600 font-semibold text-xs">
                 <span class="text-lg">🏠</span> Menu
             </button>
@@ -196,8 +196,8 @@
     <script>
         // --- NAVIGASI TAB ---
         function switchTab(tab) {
-            document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById('page-' + tab).classList.remove('hidden');
+            document.querySelectorAll('.page-content').forEach(el => el.classList.add('page-hidden'));
+            document.getElementById('page-' + tab).classList.remove('page-hidden');
 
             ['menu', 'riwayat', 'akun'].forEach(t => {
                 let btn = document.getElementById('nav-' + t);
@@ -209,7 +209,10 @@
                     btn.classList.add('text-gray-400');
                 }
             });
-            if(tab === 'akun') updateAkunView();
+
+            if(tab === 'akun' || tab === 'riwayat') {
+                updateAkunView();
+            }
         }
 
         // --- STATE & DATA STORAGE ---
@@ -217,9 +220,8 @@
         let map, markerPembelian, markerTujuan;
         let coordsPembelian = null;
         let coordsTujuan = null;
-        let selectingMode = 'pembelian'; // 'pembelian' atau 'tujuan'
+        let selectingMode = 'pembelian';
 
-        // Inisialisasi Peta Leaflet
         const inputPembelian = document.getElementById('m-lokasipembelian');
         const inputTujuan = document.getElementById('m-lokasitujuan');
         const mapContainer = document.getElementById('map-container');
@@ -241,7 +243,6 @@
                             .bindPopup("Lokasi Pembelian").openPopup();
                         inputPembelian.value = `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`;
                         
-                        // Otomatis pindah instruksi ke tujuan
                         selectingMode = 'tujuan';
                         mapInstruction.innerText = "Ketuk peta untuk menentukan titik Lokasi Tujuan.";
                     } else {
@@ -251,7 +252,6 @@
                             .bindPopup("Lokasi Tujuan").openPopup();
                         inputTujuan.value = `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`;
                         
-                        // Sembunyikan map setelah keduanya terpilih
                         setTimeout(() => {
                             mapContainer.style.display = 'none';
                         }, 1000);
@@ -278,7 +278,7 @@
 
         // --- RUMUS JARAK & TARIF ---
         function hitungJarakKM(lat1, lon1, lat2, lon2) {
-            let R = 6371; // Radius bumi dalam km
+            let R = 6371; 
             let dLat = (lat2 - lat1) * Math.PI / 180;
             let dLon = (lon2 - lon1) * Math.PI / 180;
             let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
@@ -314,7 +314,6 @@
                 return;
             }
 
-            // Hitung Pendapatan Berdasarkan Jarak
             let pendapatan = 7000;
             let jarakText = "0 km";
             if(coordsPembelian && coordsTujuan) {
@@ -345,7 +344,6 @@
             dbRiwayat.unshift(dataBaru);
             localStorage.setItem('bd_riwayat', JSON.stringify(dbRiwayat));
 
-            // Kirim ke WhatsApp
             let waText = `*BLUE DELIVERY ORDER*%0A` +
                          `--------------------------------%0A` +
                          `Jasa: ${jasa}%0A` +
@@ -367,6 +365,8 @@
             inputTujuan.value = "";
             document.getElementById('m-tambahproduk').value = "";
             document.getElementById('m-jmltambah').value = "0";
+            document.getElementById('chk-hujan').checked = false;
+            document.getElementById('chk-ojek').checked = false;
             coordsPembelian = null;
             coordsTujuan = null;
             if(markerPembelian) map.removeLayer(markerPembelian);
@@ -386,7 +386,6 @@
                 totalPendapatan += item.pendapatan;
                 totalPotongan += item.potongan;
 
-                // Render List Riwayat
                 htmlRiwayat += `
                     <div class="bg-white p-3 rounded-lg border shadow-sm text-xs space-y-1">
                         <div class="flex justify-between font-bold text-gray-700">
@@ -401,4 +400,40 @@
             });
 
             if(dbRiwayat.length === 0) {
-                htmlRiwayat = `<p clas
+                htmlRiwayat = `<p class="text-sm text-gray-400 text-center py-6">Belum ada riwayat tersimpan.</p>`;
+            }
+
+            document.getElementById('riwayat-list').innerHTML = htmlRiwayat;
+            document.getElementById('stat-orderan').innerText = totalOrderan;
+            document.getElementById('stat-pendapatan').innerText = `Rp ${totalPendapatan.toLocaleString('id-ID')}`;
+            document.getElementById('stat-potongan').innerText = `Rp ${totalPotongan.toLocaleString('id-ID')}`;
+            document.getElementById('mingguan-total').innerText = `Rp ${totalPotongan.toLocaleString('id-ID')}`;
+
+            let targetW1 = Math.min(totalOrderan, 30);
+            let targetW2 = totalOrderan > 30 ? Math.min(totalOrderan - 30, 30) : 0;
+            let targetW3 = totalOrderan > 60 ? Math.min(totalOrderan - 60, 30) : 0;
+            let targetW4 = totalOrderan > 90 ? Math.min(totalOrderan - 90, 30) : 0;
+
+            updateTargetElement('target-w1', targetW1);
+            updateTargetElement('target-w2', targetW2);
+            updateTargetElement('target-w3', targetW3);
+            updateTargetElement('target-w4', targetW4);
+        }
+
+        function updateTargetElement(elemId, count) {
+            let el = document.getElementById(elemId);
+            el.innerText = `${count}/30`;
+            if (count >= 30) {
+                el.classList.remove('text-red-500');
+                el.classList.add('text-blue-600');
+            } else {
+                el.classList.remove('text-blue-600');
+                el.classList.add('text-red-500');
+            }
+        }
+
+        // Jalankan saat pertama kali muat
+        updateAkunView();
+    </script>
+</body>
+</html>
