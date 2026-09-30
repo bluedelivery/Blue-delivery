@@ -6,11 +6,11 @@
     <title>BLUE DELIVERY</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Leaflet CSS -->
+    <!-- Leaflet CSS untuk Peta -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e5e7eb; z-index: 50; }
-        #map { height: 220px; width: 100%; border-radius: 8px; margin-top: 4px; z-index: 10; }
+        #map-container { height: 250px; display: none; width: 100%; margin-top: 8px; border-radius: 8px; }
         .suggestions-box {
             border: 1px solid #d1d5db;
             max-height: 150px;
@@ -43,7 +43,7 @@
     <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg relative pb-16">
 
         <!-- ================= PAGE 1: MENU ================= -->
-        <div id="page-menu" class="p-4">
+        <div id="page-menu" style="display: block;" class="p-4">
             <!-- Brand -->
             <div class="bg-green-600 text-white text-center py-3 rounded-lg font-bold text-xl tracking-wider shadow">
                 BLUE DELIVERY
@@ -72,33 +72,36 @@
                         <label class="block text-sm font-medium text-gray-700">Jumlah</label>
                         <select id="m-jmlproduk" class="w-full mt-1 p-2 border rounded-lg bg-white">
                             <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="10">10</option>
+                            <script>
+                                for(let i=2; i<=30; i++) document.write(`<option value="${i}">${i}</option>`);
+                            </script>
                         </select>
                     </div>
                 </div>
 
-                <!-- Lokasi Pembelian -->
+                <!-- Lokasi Pembelian (Bisa Diketik Otomatis / Autocomplete) -->
                 <div class="input-wrapper">
                     <label class="block text-sm font-medium text-gray-700">Lokasi Pembelian</label>
-                    <input type="text" id="m-lokasipembelian" placeholder="Ketik lokasi pembelian..." autocomplete="off" class="w-full mt-1 p-2 border rounded-lg bg-white">
+                    <input type="text" id="m-lokasipembelian" placeholder="Ketik nama tempat atau alamat..." autocomplete="off" class="w-full mt-1 p-2 border rounded-lg bg-white">
                     <div id="suggestions-pembelian" class="suggestions-box"></div>
                 </div>
 
-                <!-- Lokasi Tujuan -->
+                <!-- Lokasi Tujuan (Bisa Diketik Otomatis / Autocomplete) -->
                 <div class="input-wrapper">
                     <label class="block text-sm font-medium text-gray-700">Lokasi Tujuan</label>
-                    <input type="text" id="m-lokasitujuan" placeholder="Ketik lokasi tujuan..." autocomplete="off" class="w-full mt-1 p-2 border rounded-lg bg-white">
+                    <input type="text" id="m-lokasitujuan" placeholder="Ketik nama tempat atau alamat..." autocomplete="off" class="w-full mt-1 p-2 border rounded-lg bg-white">
                     <div id="suggestions-tujuan" class="suggestions-box"></div>
                 </div>
 
+                <!-- Tombol Buka Peta Manual (Opsional) -->
+                <button type="button" onclick="toggleMap()" class="w-full bg-gray-200 text-gray-700 py-1.5 rounded-lg text-xs font-semibold hover:bg-gray-300 transition">
+                    📍 Tampilkan/Sembunyikan Peta Titik
+                </button>
+
                 <!-- Peta Interaktif -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Peta Lokasi</label>
-                    <div id="map"></div>
+                <div id="map-container">
+                    <div id="map" style="width: 100%; height: 100%; border-radius: 8px;"></div>
+                    <p class="text-xs text-center text-gray-500 mt-1" id="map-instruction">Peta interaktif untuk melihat titik koordinat.</p>
                 </div>
 
                 <!-- Tambahkan Produk Tambahan -->
@@ -111,10 +114,9 @@
                         <label class="block text-sm font-medium text-gray-700">Jumlah</label>
                         <select id="m-jmltambah" class="w-full mt-1 p-2 border rounded-lg bg-white">
                             <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="5">5</option>
+                            <script>
+                                for(let i=1; i<=30; i++) document.write(`<option value="${i}">${i}</option>`);
+                            </script>
                         </select>
                     </div>
                 </div>
@@ -139,21 +141,26 @@
         </div>
 
         <!-- ================= PAGE 2: RIWAYAT ================= -->
-        <div id="page-riwayat" class="p-4" style="display: none;">
+        <div id="page-riwayat" style="display: none;" class="p-4">
             <h2 class="text-xl font-bold text-gray-800 mb-2 border-b pb-2">Riwayat Order</h2>
+            <p class="text-xs text-gray-500 mb-4">Catatan: Riwayat hanya bisa dihapus oleh admin.</p>
             <div id="riwayat-list" class="space-y-3">
                 <p class="text-sm text-gray-400 text-center py-6">Belum ada riwayat tersimpan.</p>
             </div>
         </div>
 
         <!-- ================= PAGE 3: AKUN ================= -->
-        <div id="page-akun" class="p-4 space-y-4" style="display: none;">
+        <div id="page-akun" style="display: none;" class="p-4 space-y-4">
+            <!-- Profil Pengguna -->
             <div class="flex flex-col items-center bg-green-50 p-4 rounded-xl border border-green-200">
-                <div class="w-20 h-20 bg-green-600 text-white rounded-full flex items-center justify-center text-3xl font-bold shadow">👤</div>
-                <h3 class="mt-2 text-lg font-bold text-gray-800">Kurir Blue Delivery</h3>
+                <div class="w-20 h-20 bg-green-600 text-white rounded-full flex items-center justify-center text-3xl font-bold shadow">
+                    👤
+                </div>
+                <h3 id="nama-akun" class="mt-2 text-lg font-bold text-gray-800">Kurir Blue Delivery</h3>
                 <span class="text-xs text-green-700 bg-green-200 px-2 py-0.5 rounded-full font-semibold">Aktif</span>
             </div>
 
+            <!-- Statistik -->
             <div class="grid grid-cols-3 gap-2 text-center">
                 <div class="bg-white p-3 rounded-xl border shadow-sm">
                     <p class="text-xs text-gray-500">Orderan</p>
@@ -176,9 +183,10 @@
                 <p class="text-xs text-gray-400 mt-1">Akumulasi potongan bersih per minggu.</p>
             </div>
 
-            <!-- Target Mingguan -->
+            <!-- Target Mingguan (Minggu 1 s.d 4) -->
             <div class="bg-white p-4 rounded-xl border shadow-sm space-y-3">
                 <h4 class="text-sm font-bold text-gray-700">Target Mingguan Kurir</h4>
+                
                 <div class="flex justify-between items-center border-b pb-2">
                     <span class="text-sm text-gray-600">Minggu Pertama</span>
                     <span id="target-w1" class="font-bold text-red-500 text-sm">0/30</span>
@@ -213,13 +221,36 @@
 
     </div>
 
-    <!-- Leaflet JS -->
+    <!-- Leaflet JS untuk Peta -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // --- NAVIGASI TAB ---
+        function switchTab(tab) {
+            document.getElementById('page-menu').style.display = 'none';
+            document.getElementById('page-riwayat').style.display = 'none';
+            document.getElementById('page-akun').style.display = 'none';
+
+            document.getElementById('page-' + tab).style.display = 'block';
+
+            ['menu', 'riwayat', 'akun'].forEach(t => {
+                let btn = document.getElementById('nav-' + t);
+                if(t === tab) {
+                    btn.classList.remove('text-gray-400');
+                    btn.classList.add('text-green-600');
+                } else {
+                    btn.classList.remove('text-green-600');
+                    btn.classList.add('text-gray-400');
+                }
+            });
+
+            if(tab === 'akun' || tab === 'riwayat') {
+                updateAkunView();
+            }
+        }
+
+        // --- STATE & DATA STORAGE ---
         let dbRiwayat = JSON.parse(localStorage.getItem('bd_riwayat')) || [];
-        let map = null;
-        let markerPembelian = null;
-        let markerTujuan = null;
+        let map, markerPembelian, markerTujuan;
         let coordsPembelian = null;
         let coordsTujuan = null;
 
@@ -227,66 +258,63 @@
         const inputTujuan = document.getElementById('m-lokasitujuan');
         const boxPembelian = document.getElementById('suggestions-pembelian');
         const boxTujuan = document.getElementById('suggestions-tujuan');
+        const mapContainer = document.getElementById('map-container');
 
-        // Inisialisasi Peta saat pertama kali dibuka
-        window.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                map = L.map('map').setView([-6.200000, 106.816666], 13);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
-            }, 300);
-        });
-
-        function switchTab(tab) {
-            document.getElementById('page-menu').style.display = (tab === 'menu') ? 'block' : 'none';
-            document.getElementById('page-riwayat').style.display = (tab === 'riwayat') ? 'block' : 'none';
-            document.getElementById('page-akun').style.display = (tab === 'akun') ? 'block' : 'none';
-
-            let navMenu = document.getElementById('nav-menu');
-            let navRiwayat = document.getElementById('nav-riwayat');
-            let navAkun = document.getElementById('nav-akun');
-
-            navMenu.className = "flex flex-col items-center font-semibold text-xs " + (tab === 'menu' ? "text-green-600" : "text-gray-400");
-            navRiwayat.className = "flex flex-col items-center font-semibold text-xs " + (tab === 'riwayat' ? "text-green-600" : "text-gray-400");
-            navAkun.className = "flex flex-col items-center font-semibold text-xs " + (tab === 'akun' ? "text-green-600" : "text-gray-400");
-
-            if (tab === 'menu' && map) {
-                setTimeout(function() { map.invalidateSize(); }, 100);
-            }
-            if (tab === 'riwayat' || tab === 'akun') {
-                updateAkunView();
+        function toggleMap() {
+            if (mapContainer.style.display === 'block') {
+                mapContainer.style.display = 'none';
+            } else {
+                mapContainer.style.display = 'block';
+                initMap();
+                setTimeout(() => { map.invalidateSize(); }, 300);
             }
         }
 
+        function initMap(lat=-6.200000, lng=106.816666) {
+            if(!map) {
+                map = L.map('map').setView([lat, lng], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                }).addTo(map);
+            }
+        }
+
+        // --- AUTOCOMPLETE PENCARIAN LOKASI (NOMINATIM API) ---
         function setupAutocomplete(inputEl, boxEl, isPembelian) {
             let timeoutId;
             inputEl.addEventListener('input', function() {
                 clearTimeout(timeoutId);
-                let query = this.value;
-                if(query.length < 3) {
+                const query = this.value;
+                if (query.length < 3) {
                     boxEl.innerHTML = '';
                     return;
                 }
+
                 timeoutId = setTimeout(() => {
                     fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=id`)
-                        .then(res => res.json())
+                        .then(response => response.json())
                         .then(data => {
                             boxEl.innerHTML = '';
                             data.forEach(place => {
-                                let div = document.createElement('div');
+                                const div = document.createElement('div');
                                 div.classList.add('suggestion-item');
                                 div.textContent = place.display_name;
+                                
                                 div.addEventListener('click', function() {
                                     inputEl.value = place.display_name;
                                     boxEl.innerHTML = '';
+                                    
                                     let latlng = { lat: parseFloat(place.lat), lng: parseFloat(place.lon) };
                                     
                                     if(isPembelian) {
                                         coordsPembelian = latlng;
+                                        initMap(latlng.lat, latlng.lng);
                                         if(markerPembelian) map.removeLayer(markerPembelian);
                                         markerPembelian = L.marker([latlng.lat, latlng.lng]).addTo(map).bindPopup("Pembelian").openPopup();
                                         map.setView([latlng.lat, latlng.lng], 15);
                                     } else {
                                         coordsTujuan = latlng;
+                                        initMap(latlng.lat, latlng.lng);
                                         if(markerTujuan) map.removeLayer(markerTujuan);
                                         markerTujuan = L.marker([latlng.lat, latlng.lng]).addTo(map).bindPopup("Tujuan").openPopup();
                                         map.setView([latlng.lat, latlng.lng], 15);
@@ -294,7 +322,8 @@
                                 });
                                 boxEl.appendChild(div);
                             });
-                        }).catch(err => console.error(err));
+                        })
+                        .catch(err => console.error('Error:', err));
                 }, 400);
             });
         }
@@ -302,11 +331,13 @@
         setupAutocomplete(inputPembelian, boxPembelian, true);
         setupAutocomplete(inputTujuan, boxTujuan, false);
 
+        // Tutup kotak saran jika klik di luar
         document.addEventListener('click', function(e) {
-            if(e.target !== inputPembelian) boxPembelian.innerHTML = '';
-            if(e.target !== inputTujuan) boxTujuan.innerHTML = '';
+            if (e.target !== inputPembelian) boxPembelian.innerHTML = '';
+            if (e.target !== inputTujuan) boxTujuan.innerHTML = '';
         });
 
+        // --- RUMUS JARAK & TARIF ---
         function hitungJarakKM(lat1, lon1, lat2, lon2) {
             let R = 6371; 
             let dLat = (lat2 - lat1) * Math.PI / 180;
@@ -314,9 +345,20 @@
             let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
                     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
                     Math.sin(dLon/2) * Math.sin(dLon/2);
-            return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+            let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
         }
 
+        function hitungTarif(jarakKM) {
+            if (jarakKM <= 2) {
+                return 7000;
+            } else {
+                let sisaKm = Math.ceil(jarakKM - 2);
+                return 7000 + (sisaKm * 1000);
+            }
+        }
+
+        // --- KIRIM & SIMPAN DATA ---
         function kirimDanSimpanData() {
             let jasa = document.getElementById('m-jasa').value;
             let namaProduk = document.getElementById('m-namaproduk').value;
@@ -325,9 +367,11 @@
             let jmlTambah = parseInt(document.getElementById('m-jmltambah').value) || 0;
             let pembelian = inputPembelian.value;
             let tujuan = inputTujuan.value;
+            let isHujan = document.getElementById('chk-hujan').checked;
+            let isOjek = document.getElementById('chk-ojek').checked;
 
             if(!jasa || !pembelian || !tujuan) {
-                alert("Mohon lengkapi jenis jasa serta lokasi pembelian dan tujuan!");
+                alert("Mohon lengkapi pilihan jasa, lokasi pembelian, dan lokasi tujuan!");
                 return;
             }
 
@@ -336,52 +380,32 @@
             if(coordsPembelian && coordsTujuan) {
                 let km = hitungJarakKM(coordsPembelian.lat, coordsPembelian.lng, coordsTujuan.lat, coordsTujuan.lng);
                 jarakText = km.toFixed(2) + " km";
-                pendapatan = km <= 2 ? 7000 : 7000 + (Math.ceil(km - 2) * 1000);
+                pendapatan = hitungTarif(km);
             }
 
             let potongan = pendapatan * 0.12;
+            let totalOrderanMasuk = jmlProduk + jmlTambah;
+
             let dataBaru = {
                 id: Date.now(),
                 tanggal: new Date().toISOString(),
-                jasa, namaProduk, jmlProduk, tambahProduk, jmlTambah,
-                pembelian, tujuan, jarak: jarakText, pendapatan, potongan,
-                totalOrderan: jmlProduk + jmlTambah
+                jasa,
+                namaProduk,
+                jmlProduk,
+                tambahProduk,
+                jmlTambah,
+                pembelian,
+                tujuan,
+                jarak: jarakText,
+                pendapatan,
+                potongan,
+                totalOrderan: totalOrderanMasuk
             };
 
             dbRiwayat.unshift(dataBaru);
             localStorage.setItem('bd_riwayat', JSON.stringify(dbRiwayat));
 
-            let waText = `*BLUE DELIVERY ORDER*%0A--------------------------------%0A` +
-                         `Jasa: ${jasa}%0AProduk: ${namaProduk} (${jmlProduk}x)%0A` +
-                         `Lokasi Pembelian: ${pembelian}%0A` +
-                         `Lokasi Tujuan: ${tujuan}%0A` +
-                         `Estimasi Jarak: ${jarakText}%0A` +
-                         `Pendapatan: Rp ${pendapatan.toLocaleString('id-ID')}`;
-
-            window.open(`https://wa.me/?text=${waText}`, '_blank');
-            alert("Data berhasil disimpan!");
-        }
-
-        function updateAkunView() {
-            let totalOrderan = 0, totalPendapatan = 0, totalPotongan = 0, htmlRiwayat = "";
-            dbRiwayat.forEach(item => {
-                totalOrderan += item.totalOrderan;
-                totalPendapatan += item.pendapatan;
-                totalPotongan += item.potongan;
-                htmlRiwayat += `<div class="bg-white p-3 rounded-lg border shadow-sm text-xs space-y-1">
-                    <div class="flex justify-between font-bold text-gray-700">
-                        <span>${item.jasa} - ${item.namaProduk || 'Tanpa Nama'}</span>
-                        <span class="text-green-600">Rp ${item.pendapatan.toLocaleString('id-ID')}</span>
-                    </div>
-                    <p class="text-gray-500">Dari: ${item.pembelian}</p>
-                    <p class="text-gray-500">Tujuan: ${item.tujuan} (${item.jarak})</p>
-                </div>`;
-            });
-            if(dbRiwayat.length === 0) htmlRiwayat = `<p class="text-sm text-gray-400 text-center py-6">Belum ada riwayat tersimpan.</p>`;
-            
-            let riwayatListEl = document.getElementById('riwayat-list');
-            if(riwayatListEl) riwayatListEl.innerHTML = htmlRiwayat;
-
-            let statOrderan = document.getElementById('stat-orderan');
-            let statPendapatan = document.getElementById('stat-pendapatan');
-            let statPotongan = document.getElement
+            let waText = `*BLUE DELIVERY ORDER*%0A` +
+                         `--------------------------------%0A` +
+                         `Jasa: ${jasa}%0A` +
+                         `Produk: ${namaP
