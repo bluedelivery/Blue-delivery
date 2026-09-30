@@ -8,36 +8,32 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <!-- Leaflet Control Geocoder CSS (Untuk Pencarian Otomatis) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-    
     <style>
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e5e7eb; z-index: 50; }
-        #map { height: 250px; width: 100%; margin-top: 8px; border-radius: 8px; }
-        /* Kustomisasi kotak pencarian bawaan geocoder agar menyatu dengan desain */
-        .leaflet-control-geocoder {
-            border-radius: 0.5rem !important;
-            border: 1px solid #d1d5db !important;
-            box-shadow: none !important;
-            width: 100% !important;
-            background: white !important;
-        }
-        .leaflet-control-geocoder-form input {
-            height: 40px;
-            padding: 0 12px;
-            width: 100%;
-            border-radius: 0.5rem;
-            outline: none;
-            font-size: 14px;
-        }
-        .leaflet-control-geocoder-alternatives {
+        #map-container { height: 250px; width: 100%; margin-top: 8px; border-radius: 8px; }
+        .suggestions-box {
+            border: 1px solid #d1d5db;
+            max-height: 150px;
+            overflow-y: auto;
             background: white;
-            border-radius: 0.5rem;
+            position: absolute;
+            z-index: 1000;
+            width: 100%;
+            border-radius: 0.375rem;
             box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
-            margin-top: 4px;
         }
-        .leaflet-control-geocoder-icon {
-            display: none !important; /* Sembunyikan ikon kaca pembesar bawaan */
+        .suggestion-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 13px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .suggestion-item:hover {
+            background-color: #f0fdf4;
+            color: #16a34a;
+        }
+        .input-wrapper {
+            position: relative;
         }
     </style>
 </head>
@@ -83,22 +79,26 @@
                     </div>
                 </div>
 
-                <!-- Lokasi Pembelian (Otomatis Autocomplete) -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Lokasi Pembelian</label>
-                    <div id="search-pembelian-container"></div>
+                <!-- Lokasi Pembelian (Bisa Diketik & Autocomplete) -->
+                <div class="input-wrapper">
+                    <label class="block text-sm font-medium text-gray-700">Lokasi Pembelian</label>
+                    <input type="text" id="m-lokasipembelian" placeholder="Ketik nama tempat atau alamat..." autocomplete="off" class="w-full mt-1 p-2 border rounded-lg bg-white">
+                    <div id="suggestions-pembelian" class="suggestions-box"></div>
                 </div>
 
-                <!-- Lokasi Tujuan (Otomatis Autocomplete) -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Lokasi Tujuan</label>
-                    <div id="search-tujuan-container"></div>
+                <!-- Lokasi Tujuan (Bisa Diketik & Autocomplete) -->
+                <div class="input-wrapper">
+                    <label class="block text-sm font-medium text-gray-700">Lokasi Tujuan</label>
+                    <input type="text" id="m-lokasitujuan" placeholder="Ketik nama tempat atau alamat..." autocomplete="off" class="w-full mt-1 p-2 border rounded-lg bg-white">
+                    <div id="suggestions-tujuan" class="suggestions-box"></div>
                 </div>
 
                 <!-- Peta Interaktif -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Peta Lokasi</label>
-                    <div id="map"></div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Peta Lokasi</label>
+                    <div id="map-container">
+                        <div id="map" style="width: 100%; height: 100%; border-radius: 8px;"></div>
+                    </div>
                 </div>
 
                 <!-- Tambahkan Produk Tambahan -->
@@ -152,6 +152,7 @@
                 <h3 class="mt-2 text-lg font-bold text-gray-800">Kurir Blue Delivery</h3>
                 <span class="text-xs text-green-700 bg-green-200 px-2 py-0.5 rounded-full font-semibold">Aktif</span>
             </div>
+
             <div class="grid grid-cols-3 gap-2 text-center">
                 <div class="bg-white p-3 rounded-xl border shadow-sm">
                     <p class="text-xs text-gray-500">Orderan</p>
@@ -164,6 +165,34 @@
                 <div class="bg-white p-3 rounded-xl border shadow-sm">
                     <p class="text-xs text-gray-500">Potongan (12%)</p>
                     <p id="stat-potongan" class="text-sm font-bold text-red-500">Rp 0</p>
+                </div>
+            </div>
+
+            <!-- Potongan Per/Minggu -->
+            <div class="bg-white p-4 rounded-xl border shadow-sm">
+                <h4 class="text-sm font-bold text-gray-700 mb-1">Potongan Per/Minggu (Jumat - Jumat)</h4>
+                <p id="mingguan-total" class="text-xl font-bold text-blue-600">Rp 0</p>
+                <p class="text-xs text-gray-400 mt-1">Akumulasi potongan bersih per minggu.</p>
+            </div>
+
+            <!-- Target Mingguan -->
+            <div class="bg-white p-4 rounded-xl border shadow-sm space-y-3">
+                <h4 class="text-sm font-bold text-gray-700">Target Mingguan Kurir</h4>
+                <div class="flex justify-between items-center border-b pb-2">
+                    <span class="text-sm text-gray-600">Minggu Pertama</span>
+                    <span id="target-w1" class="font-bold text-red-500 text-sm">0/30</span>
+                </div>
+                <div class="flex justify-between items-center border-b pb-2">
+                    <span class="text-sm text-gray-600">Minggu Kedua</span>
+                    <span id="target-w2" class="font-bold text-red-500 text-sm">0/30</span>
+                </div>
+                <div class="flex justify-between items-center border-b pb-2">
+                    <span class="text-sm text-gray-600">Minggu Ketiga</span>
+                    <span id="target-w3" class="font-bold text-red-500 text-sm">0/30</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-600">Minggu Keempat</span>
+                    <span id="target-w4" class="font-bold text-red-500 text-sm">0/30</span>
                 </div>
             </div>
         </div>
@@ -185,8 +214,6 @@
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <!-- Leaflet Control Geocoder JS -->
-    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <script>
         function switchTab(tab) {
             document.getElementById('page-menu').style.display = tab === 'menu' ? 'block' : 'none';
@@ -207,53 +234,74 @@
         }
 
         let dbRiwayat = JSON.parse(localStorage.getItem('bd_riwayat')) || [];
-        
-        // Inisialisasi Peta
-        let map = L.map('map').setView([-6.200000, 106.816666], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
-
-        let markerPembelian = null;
-        let markerTujuan = null;
-        let teksPembelian = "";
-        let teksTujuan = "";
+        let map, markerPembelian, markerTujuan;
         let coordsPembelian = null;
         let coordsTujuan = null;
 
-        // Geocoder untuk Lokasi Pembelian
-        let geocoderPembelian = L.Control.geocoder({
-            defaultMarkGeocode: false,
-            placeholder: "Ketik lokasi pembelian..."
-        }).on('markgeocode', function(e) {
-            let bbox = e.geocode.bbox;
-            let center = e.geocode.center;
-            teksPembelian = e.geocode.name;
-            coordsPembelian = center;
-            
-            if(markerPembelian) map.removeLayer(markerPembelian);
-            markerPembelian = L.marker(center).addTo(map).bindPopup("Pembelian: " + teksPembelian).openPopup();
-            map.fitBounds(bbox);
-        }).addTo(map);
+        const inputPembelian = document.getElementById('m-lokasipembelian');
+        const inputTujuan = document.getElementById('m-lokasitujuan');
+        const boxPembelian = document.getElementById('suggestions-pembelian');
+        const boxTujuan = document.getElementById('suggestions-tujuan');
 
-        // Masukkan elemen geocoder pembelian ke dalam div khusus di form
-        document.getElementById('search-pembelian-container').appendChild(geocoderPembelian.getContainer());
+        // Inisialisasi Peta
+        function initMap(lat=-6.200000, lng=106.816666) {
+            if(!map) {
+                map = L.map('map').setView([lat, lng], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+            }
+        }
+        initMap();
 
-        // Geocoder untuk Lokasi Tujuan
-        let geocoderTujuan = L.Control.geocoder({
-            defaultMarkGeocode: false,
-            placeholder: "Ketik lokasi tujuan..."
-        }).on('markgeocode', function(e) {
-            let bbox = e.geocode.bbox;
-            let center = e.geocode.center;
-            teksTujuan = e.geocode.name;
-            coordsTujuan = center;
-            
-            if(markerTujuan) map.removeLayer(markerTujuan);
-            markerTujuan = L.marker(center).addTo(map).bindPopup("Tujuan: " + teksTujuan).openPopup();
-            map.fitBounds(bbox);
-        }).addTo(map);
+        // Autocomplete Pencarian Lokasi
+        function setupAutocomplete(inputEl, boxEl, isPembelian) {
+            let timeoutId;
+            inputEl.addEventListener('input', function() {
+                clearTimeout(timeoutId);
+                let query = this.value;
+                if(query.length < 3) {
+                    boxEl.innerHTML = '';
+                    return;
+                }
+                timeoutId = setTimeout(() => {
+                    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=id`)
+                        .then(res => res.json())
+                        .then(data => {
+                            boxEl.innerHTML = '';
+                            data.forEach(place => {
+                                let div = document.createElement('div');
+                                div.classList.add('suggestion-item');
+                                div.textContent = place.display_name;
+                                div.addEventListener('click', function() {
+                                    inputEl.value = place.display_name;
+                                    boxEl.innerHTML = '';
+                                    let latlng = { lat: parseFloat(place.lat), lng: parseFloat(place.lon) };
+                                    
+                                    if(isPembelian) {
+                                        coordsPembelian = latlng;
+                                        if(markerPembelian) map.removeLayer(markerPembelian);
+                                        markerPembelian = L.marker([latlng.lat, latlng.lng]).addTo(map).bindPopup("Pembelian").openPopup();
+                                        map.setView([latlng.lat, latlng.lng], 15);
+                                    } else {
+                                        coordsTujuan = latlng;
+                                        if(markerTujuan) map.removeLayer(markerTujuan);
+                                        markerTujuan = L.marker([latlng.lat, latlng.lng]).addTo(map).bindPopup("Tujuan").openPopup();
+                                        map.setView([latlng.lat, latlng.lng], 15);
+                                    }
+                                });
+                                boxEl.appendChild(div);
+                            });
+                        }).catch(err => console.error(err));
+                }, 400);
+            });
+        }
 
-        // Masukkan elemen geocoder tujuan ke dalam div khusus di form
-        document.getElementById('search-tujuan-container').appendChild(geocoderTujuan.getContainer());
+        setupAutocomplete(inputPembelian, boxPembelian, true);
+        setupAutocomplete(inputTujuan, boxTujuan, false);
+
+        document.addEventListener('click', function(e) {
+            if(e.target !== inputPembelian) boxPembelian.innerHTML = '';
+            if(e.target !== inputTujuan) boxTujuan.innerHTML = '';
+        });
 
         function hitungJarakKM(lat1, lon1, lat2, lon2) {
             let R = 6371; 
@@ -262,8 +310,7 @@
             let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
                     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
                     Math.sin(dLon/2) * Math.sin(dLon/2);
-            let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c;
+            return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
         }
 
         function kirimDanSimpanData() {
@@ -272,26 +319,30 @@
             let jmlProduk = parseInt(document.getElementById('m-jmlproduk').value) || 0;
             let tambahProduk = document.getElementById('m-tambahproduk').value;
             let jmlTambah = parseInt(document.getElementById('m-jmltambah').value) || 0;
+            let pembelian = inputPembelian.value;
+            let tujuan = inputTujuan.value;
             let isHujan = document.getElementById('chk-hujan').checked;
             let isOjek = document.getElementById('chk-ojek').checked;
 
-            if(!jasa || !teksPembelian || !teksTujuan) {
-                alert("Mohon lengkapi jenis jasa serta pilih Lokasi Pembelian & Lokasi Tujuan dari daftar saran yang muncul!");
+            if(!jasa || !pembelian || !tujuan) {
+                alert("Mohon lengkapi jenis jasa serta lokasi pembelian dan tujuan!");
                 return;
             }
 
-            let jarakKM = hitungJarakKM(coordsPembelian.lat, coordsPembelian.lng, coordsTujuan.lat, coordsTujuan.lng);
-            let pendapatan = jarakKM <= 2 ? 7000 : 7000 + (Math.ceil(jarakKM - 2) * 1000);
-            let potongan = pendapatan * 0.12;
+            let pendapatan = 7000;
+            let jarakText = "0 km";
+            if(coordsPembelian && coordsTujuan) {
+                let km = hitungJarakKM(coordsPembelian.lat, coordsPembelian.lng, coordsTujuan.lat, coordsTujuan.lng);
+                jarakText = km.toFixed(2) + " km";
+                pendapatan = km <= 2 ? 7000 : 7000 + (Math.ceil(km - 2) * 1000);
+            }
 
+            let potongan = pendapatan * 0.12;
             let dataBaru = {
                 id: Date.now(),
                 tanggal: new Date().toISOString(),
                 jasa, namaProduk, jmlProduk, tambahProduk, jmlTambah,
-                pembelian: teksPembelian,
-                tujuan: teksTujuan,
-                jarak: jarakKM.toFixed(2) + " km",
-                pendapatan, potongan,
+                pembelian, tujuan, jarak: jarakText, pendapatan, potongan,
                 totalOrderan: jmlProduk + jmlTambah
             };
 
@@ -300,9 +351,9 @@
 
             let waText = `*BLUE DELIVERY ORDER*%0A--------------------------------%0A` +
                          `Jasa: ${jasa}%0AProduk: ${namaProduk} (${jmlProduk}x)%0A` +
-                         `Lokasi Pembelian: ${teksPembelian}%0A` +
-                         `Lokasi Tujuan: ${teksTujuan}%0A` +
-                         `Estimasi Jarak: ${jarakKM.toFixed(2)} km%0A` +
+                         `Lokasi Pembelian: ${pembelian}%0A` +
+                         `Lokasi Tujuan: ${tujuan}%0A` +
+                         `Estimasi Jarak: ${jarakText}%0A` +
                          `Pendapatan: Rp ${pendapatan.toLocaleString('id-ID')}`;
 
             window.open(`https://wa.me/?text=${waText}`, '_blank');
@@ -329,8 +380,6 @@
             document.getElementById('stat-orderan').innerText = totalOrderan;
             document.getElementById('stat-pendapatan').innerText = `Rp ${totalPendapatan.toLocaleString('id-ID')}`;
             document.getElementById('stat-potongan').innerText = `Rp ${totalPotongan.toLocaleString('id-ID')}`;
-        }
-    </script>
-</body>
-</html>
+            document.getElementById('mingguan-total').innerText = `Rp ${totalPotongan.toLocaleString('id-ID')}`;
 
+            let targetW1 =
