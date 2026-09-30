@@ -3,601 +3,402 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blue Delivery</title>
+    <title>BLUE DELIVERY</title>
+    <!-- Tailwind CSS untuk Styling Cepat & Modern -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Leaflet CSS untuk Peta -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background-color: #f6f8fa;
-            display: flex;
-            justify-content: center;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 420px;
-            background: #f6f8fa;
-            min-height: 100vh;
-            padding-bottom: 100px;
-            position: relative;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
-        }
-
-        .top-header {
-            background-color: #27ae60;
-            color: white;
-            padding: 14px 16px;
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .content-padding {
-            padding: 12px 16px;
-        }
-
-        .alert-banner {
-            background: #ffffff;
-            border-radius: 6px;
-            padding: 12px;
-            text-align: center;
-            font-size: 12px;
-            font-weight: bold;
-            color: #333;
-            line-height: 1.4;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            border-top: 4px solid #f1c40f;
-        }
-
-        .section-label {
-            font-size: 13px;
-            color: #333;
-            margin-top: 10px;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        input[type="text"], input[type="number"], select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #dcdcdc;
-            font-size: 13px;
-            margin-bottom: 8px;
-            outline: none;
-            background: #fff;
-        }
-
-        .row-2 {
-            display: flex;
-            gap: 8px;
-        }
-
-        .product-item-box {
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 8px;
-            position: relative;
-        }
-
-        .btn-add-product {
-            background-color: #1a73e8;
-            color: white;
-            border: none;
-            padding: 10px 12px;
-            font-size: 13px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-bottom: 10px;
-            width: 100%;
-        }
-
-        .btn-remove {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            font-size: 11px;
-            border-radius: 4px;
-            cursor: pointer;
-            float: right;
-            margin-bottom: 5px;
-        }
-
-        .input-group-gps {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .input-group-gps input {
-            margin-bottom: 0;
-        }
-
-        .btn-gps {
-            background-color: #1a73e8;
-            color: white;
-            border: none;
-            padding: 10px 12px;
-            font-size: 12px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            font-size: 13px;
-            color: #333;
-            background: #fff;
-            padding: 8px 10px;
-            border-radius: 6px;
-            border: 1px solid #dcdcdc;
-        }
-
-        .checkbox-group input {
-            width: 16px;
-            height: 16px;
-            margin-bottom: 0;
-        }
-
-        .auto-calc-box {
-            background: #e8f0fe;
-            border: 1px dashed #1a73e8;
-            border-radius: 8px;
-            padding: 12px;
-            margin: 12px 0;
-            text-align: center;
-        }
-
-        .auto-calc-title {
-            font-size: 12px;
-            color: #1a73e8;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-
-        .auto-calc-value {
-            font-size: 20px;
-            font-weight: 800;
-            color: #1a73e8;
-        }
-
-        .btn-primary-action {
-            background-color: #27ae60;
-            color: white;
-            font-weight: bold;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-
-        .card {
-            background: #ffffff;
-            border-radius: 10px;
-            padding: 14px 16px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-            margin-bottom: 12px;
-        }
-
-        .card-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #555;
-            margin-bottom: 12px;
-        }
-
-        .profile-card {
-            background: linear-gradient(135deg, #1a73e8, #4285f4);
-            color: white;
-            border-radius: 10px;
-            padding: 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .profile-name {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-
-        .profile-info {
-            font-size: 13px;
-            opacity: 0.9;
-        }
-
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .stat-val {
-            font-weight: bold;
-        }
-
-        .highlight-box {
-            background: #ffffff;
-            border-radius: 10px;
-            padding: 16px;
-            text-align: center;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-            margin-bottom: 12px;
-        }
-
-        .highlight-title {
-            color: #1a73e8;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        .highlight-value {
-            font-size: 22px;
-            font-weight: 800;
-            color: #111;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .mini-card {
-            background: #ffffff;
-            border-radius: 8px;
-            padding: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            text-align: center;
-        }
-
-        .mini-label {
-            font-size: 12px;
-            color: #777;
-            margin-bottom: 6px;
-        }
-
-        .val-blue {
-            font-size: 13px;
-            font-weight: bold;
-            color: #1a73e8;
-        }
-
-        .target-red {
-            font-size: 13px;
-            font-weight: bold;
-            color: #e74c3c;
-        }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 420px;
-            background: #ffffff;
-            border-top: 1px solid #eaeaea;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            box-shadow: 0 -3px 10px rgba(0,0,0,0.1);
-            z-index: 99999;
-        }
-
-        .nav-item {
-            text-align: center;
-            font-size: 12px;
-            color: #888;
-            cursor: pointer;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-            background: transparent;
-            border: none;
-            outline: none;
-        }
-
-        .nav-item svg {
-            width: 22px;
-            height: 22px;
-            fill: #888;
-            pointer-events: none;
-        }
-
-        .nav-item.active {
-            color: #27ae60;
-            font-weight: bold;
-        }
-
-        .nav-item.active svg {
-            fill: #27ae60;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e5e7eb; z-index: 50; }
+        #map-container { height: 250px; display: none; width: 100%; margin-top: 8px; border-radius: 8px; }
     </style>
 </head>
-<body>
+<body class="bg-gray-100 pb-20">
 
-<div class="app-container">
-    <!-- TAB HOME -->
-    <div id="tab-home" class="tab-content active">
-        <div class="top-header">Laporan Blue Delivery</div>
-        <div class="content-padding">
-            <div class="alert-banner">
-                PROSES ANTAR BARANG WAJIB DICEK DAN LEBIH TELITI...!!! HINDARI BARANG MELANGGAR HUKUM DAN AGAMA..!
+    <!-- CONTAINER UTAMA -->
+    <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg relative pb-16">
+
+        <!-- ================= PAGE 1: MENU ================= -->
+        <div id="page-menu" class="page-content p-4">
+            <!-- Brand -->
+            <div class="bg-green-600 text-white text-center py-3 rounded-lg font-bold text-xl tracking-wider shadow">
+                BLUE DELIVERY
             </div>
+
+            <!-- Form Order -->
+            <div class="mt-4 space-y-3">
+                <!-- Kolom 1: Produk/Jasa -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Produk/Jasa</label>
+                    <select id="m-jasa" class="w-full mt-1 p-2 border rounded-lg bg-white">
+                        <option value="">Pilih...</option>
+                        <option value="Makanan">Makanan</option>
+                        <option value="Ojek">Ojek</option>
+                        <option value="Antar barang">Antar barang</option>
+                    </select>
+                </div>
+
+                <!-- Kolom 2: Nama Produk & Jumlah -->
+                <div class="flex gap-2">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700">Nama Produk</label>
+                        <input type="text" id="m-namaproduk" placeholder="Nama produk..." class="w-full mt-1 p-2 border rounded-lg">
+                    </div>
+                    <div class="w-24">
+                        <label class="block text-sm font-medium text-gray-700">Jumlah</label>
+                        <select id="m-jmlproduk" class="w-full mt-1 p-2 border rounded-lg bg-white">
+                            <option value="1">1</option>
+                            <script>
+                                for(let i=2; i<=30; i++) document.write(`<option value="${i}">${i}</option>`);
+                            </script>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Lokasi Pembelian -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Lokasi Pembelian (Klik untuk Buka Peta)</label>
+                    <input type="text" id="m-lokasipembelian" readonly placeholder="Klik untuk pilih titik di peta..." class="w-full mt-1 p-2 border rounded-lg bg-gray-50 cursor-pointer">
+                </div>
+
+                <!-- Lokasi Tujuan -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Lokasi Tujuan (Klik untuk Buka Peta)</label>
+                    <input type="text" id="m-lokasitujuan" readonly placeholder="Klik untuk pilih titik di peta..." class="w-full mt-1 p-2 border rounded-lg bg-gray-50 cursor-pointer">
+                </div>
+
+                <!-- Peta Interaktif -->
+                <div id="map-container">
+                    <div id="map" style="width: 100%; height: 100%; border-radius: 8px;"></div>
+                    <p class="text-xs text-center text-gray-500 mt-1" id="map-instruction">Ketuk peta untuk menentukan titik Lokasi Pembelian.</p>
+                </div>
+
+                <!-- Tambahkan Produk Tambahan -->
+                <div class="flex gap-2">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700">Tambah Produk</label>
+                        <input type="text" id="m-tambahproduk" placeholder="Produk tambahan..." class="w-full mt-1 p-2 border rounded-lg">
+                    </div>
+                    <div class="w-24">
+                        <label class="block text-sm font-medium text-gray-700">Jumlah</label>
+                        <select id="m-jmltambah" class="w-full mt-1 p-2 border rounded-lg bg-white">
+                            <option value="0">0</option>
+                            <script>
+                                for(let i=1; i<=30; i++) document.write(`<option value="${i}">${i}</option>`);
+                            </script>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Kotak Centang (Hujan & Ojek) -->
+                <div class="flex gap-4 pt-2">
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" id="chk-hujan" class="w-4 h-4 text-green-600 rounded">
+                        <span class="text-sm font-medium">Hujan</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" id="chk-ojek" class="w-4 h-4 text-green-600 rounded">
+                        <span class="text-sm font-medium">Ojek</span>
+                    </label>
+                </div>
+
+                <!-- Tombol Kirim & Bagikan -->
+                <button onclick="kirimDanSimpanData()" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold shadow hover:bg-green-700 transition">
+                    Kirim dan Bagikan
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 2: RIWAYAT ================= -->
+        <div id="page-riwayat" class="page-content p-4 hidden">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Riwayat Order</h2>
+            <p class="text-xs text-gray-500 mb-3">Catatan: Riwayat hanya bisa dihapus oleh admin.</p>
+            <div id="riwayat-list" class="space-y-3">
+                <!-- Data riwayat akan masuk ke sini secara dinamis -->
+                <p class="text-sm text-gray-400 text-center py-6">Belum ada riwayat tersimpan.</p>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 3: AKUN ================= -->
+        <div id="page-akun" class="page-content p-4 space-y-4">
+            <!-- Profil Pengguna -->
+            <div class="flex flex-col items-center bg-green-50 p-4 rounded-xl border border-green-200">
+                <div class="w-20 h-20 bg-green-600 text-white rounded-full flex items-center justify-center text-3xl font-bold shadow">
+                    👤
+                </div>
+                <h3 id="nama-akun" class="mt-2 text-lg font-bold text-gray-800">Kurir Blue Delivery</h3>
+                <span class="text-xs text-green-700 bg-green-200 px-2 py-0.5 rounded-full font-semibold">Aktif</span>
+            </div>
+
+            <!-- Statistik -->
+            <div class="grid grid-cols-3 gap-2 text-center">
+                <div class="bg-white p-3 rounded-xl border shadow-sm">
+                    <p class="text-xs text-gray-500">Orderan</p>
+                    <p id="stat-orderan" class="text-lg font-bold text-gray-800">0</p>
+                </div>
+                <div class="bg-white p-3 rounded-xl border shadow-sm">
+                    <p class="text-xs text-gray-500">Pendapatan</p>
+                    <p id="stat-pendapatan" class="text-sm font-bold text-green-600">Rp 0</p>
+                </div>
+                <div class="bg-white p-3 rounded-xl border shadow-sm">
+                    <p class="text-xs text-gray-500">Potongan (12%)</p>
+                    <p id="stat-potongan" class="text-sm font-bold text-red-500">Rp 0</p>
+                </div>
+            </div>
+
+            <!-- Potongan Per/Minggu -->
+            <div class="bg-white p-4 rounded-xl border shadow-sm">
+                <h4 class="text-sm font-bold text-gray-700 mb-1">Potongan Per/Minggu (Jumat - Jumat)</h4>
+                <p id="mingguan-total" class="text-xl font-bold text-blue-600">Rp 0</p>
+                <p class="text-xs text-gray-400 mt-1">Akumulasi potongan bersih per minggu.</p>
+            </div>
+
+            <!-- Target Mingguan (Minggu 1 s.d 4) -->
+            <div class="bg-white p-4 rounded-xl border shadow-sm space-y-3">
+                <h4 class="text-sm font-bold text-gray-700">Target Mingguan Kurir</h4>
+                
+                <div class="flex justify-between items-center border-b pb-2">
+                    <span class="text-sm text-gray-600">Minggu Pertama</span>
+                    <span id="target-w1" class="font-bold text-red-500 text-sm">0/30</span>
+                </div>
+                <div class="flex justify-between items-center border-b pb-2">
+                    <span class="text-sm text-gray-600">Minggu Kedua</span>
+                    <span id="target-w2" class="font-bold text-red-500 text-sm">0/30</span>
+                </div>
+                <div class="flex justify-between items-center border-b pb-2">
+                    <span class="text-sm text-gray-600">Minggu Ketiga</span>
+                    <span id="target-w3" class="font-bold text-red-500 text-sm">0/30</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-600">Minggu Keempat</span>
+                    <span id="target-w4" class="font-bold text-red-500 text-sm">0/30</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= NAVIGATION BAR BAWAH ================= -->
+        <div class="bottom-nav flex justify-around py-3">
+            <button onclick="switchTab('menu')" id="nav-menu" class="flex flex-col items-center text-green-600 font-semibold text-xs">
+                <span class="text-lg">🏠</span> Menu
+            </button>
+            <button onclick="switchTab('riwayat')" id="nav-riwayat" class="flex flex-col items-center text-gray-400 font-semibold text-xs">
+                <span class="text-lg">📜</span> Riwayat
+            </button>
+            <button onclick="switchTab('akun')" id="nav-akun" class="flex flex-col items-center text-gray-400 font-semibold text-xs">
+                <span class="text-lg">👤</span> Akun
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Leaflet JS untuk Peta -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // --- NAVIGASI TAB ---
+        function switchTab(tab) {
+            document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('page-' + tab).classList.remove('hidden');
+
+            ['menu', 'riwayat', 'akun'].forEach(t => {
+                let btn = document.getElementById('nav-' + t);
+                if(t === tab) {
+                    btn.classList.remove('text-gray-400');
+                    btn.classList.add('text-green-600');
+                } else {
+                    btn.classList.remove('text-green-600');
+                    btn.classList.add('text-gray-400');
+                }
+            });
+            if(tab === 'akun') updateAkunView();
+        }
+
+        // --- STATE & DATA STORAGE ---
+        let dbRiwayat = JSON.parse(localStorage.getItem('bd_riwayat')) || [];
+        let map, markerPembelian, markerTujuan;
+        let coordsPembelian = null;
+        let coordsTujuan = null;
+        let selectingMode = 'pembelian'; // 'pembelian' atau 'tujuan'
+
+        // Inisialisasi Peta Leaflet
+        const inputPembelian = document.getElementById('m-lokasipembelian');
+        const inputTujuan = document.getElementById('m-lokasitujuan');
+        const mapContainer = document.getElementById('map-container');
+        const mapInstruction = document.getElementById('map-instruction');
+
+        function initMap(lat=-6.200000, lng=106.816666) {
+            if(!map) {
+                map = L.map('map').setView([lat, lng], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                }).addTo(map);
+
+                map.on('click', function(e) {
+                    let latlng = e.latlng;
+                    if(selectingMode === 'pembelian') {
+                        coordsPembelian = latlng;
+                        if(markerPembelian) map.removeLayer(markerPembelian);
+                        markerPembelian = L.marker([latlng.lat, latlng.lng], {draggable: true}).addTo(map)
+                            .bindPopup("Lokasi Pembelian").openPopup();
+                        inputPembelian.value = `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`;
+                        
+                        // Otomatis pindah instruksi ke tujuan
+                        selectingMode = 'tujuan';
+                        mapInstruction.innerText = "Ketuk peta untuk menentukan titik Lokasi Tujuan.";
+                    } else {
+                        coordsTujuan = latlng;
+                        if(markerTujuan) map.removeLayer(markerTujuan);
+                        markerTujuan = L.marker([latlng.lat, latlng.lng], {draggable: true}).addTo(map)
+                            .bindPopup("Lokasi Tujuan").openPopup();
+                        inputTujuan.value = `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`;
+                        
+                        // Sembunyikan map setelah keduanya terpilih
+                        setTimeout(() => {
+                            mapContainer.style.display = 'none';
+                        }, 1000);
+                    }
+                });
+            }
+        }
+
+        inputPembelian.addEventListener('click', () => {
+            mapContainer.style.display = 'block';
+            selectingMode = 'pembelian';
+            mapInstruction.innerText = "Ketuk peta untuk menentukan titik Lokasi Pembelian.";
+            initMap();
+            setTimeout(() => { map.invalidateSize(); }, 300);
+        });
+
+        inputTujuan.addEventListener('click', () => {
+            mapContainer.style.display = 'block';
+            selectingMode = 'tujuan';
+            mapInstruction.innerText = "Ketuk peta untuk menentukan titik Lokasi Tujuan.";
+            initMap();
+            setTimeout(() => { map.invalidateSize(); }, 300);
+        });
+
+        // --- RUMUS JARAK & TARIF ---
+        function hitungJarakKM(lat1, lon1, lat2, lon2) {
+            let R = 6371; // Radius bumi dalam km
+            let dLat = (lat2 - lat1) * Math.PI / 180;
+            let dLon = (lon2 - lon1) * Math.PI / 180;
+            let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                    Math.sin(dLon/2) * Math.sin(dLon/2);
+            let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        function hitungTarif(jarakKM) {
+            if (jarakKM <= 2) {
+                return 7000;
+            } else {
+                let sisaKm = Math.ceil(jarakKM - 2);
+                return 7000 + (sisaKm * 1000);
+            }
+        }
+
+        // --- KIRIM & SIMPAN DATA ---
+        function kirimDanSimpanData() {
+            let jasa = document.getElementById('m-jasa').value;
+            let namaProduk = document.getElementById('m-namaproduk').value;
+            let jmlProduk = parseInt(document.getElementById('m-jmlproduk').value) || 0;
+            let tambahProduk = document.getElementById('m-tambahproduk').value;
+            let jmlTambah = parseInt(document.getElementById('m-jmltambah').value) || 0;
+            let pembelian = inputPembelian.value;
+            let tujuan = inputTujuan.value;
+            let isHujan = document.getElementById('chk-hujan').checked;
+            let isOjek = document.getElementById('chk-ojek').checked;
+
+            if(!jasa || !pembelian || !tujuan) {
+                alert("Mohon lengkapi pilihan jasa, lokasi pembelian, dan lokasi tujuan!");
+                return;
+            }
+
+            // Hitung Pendapatan Berdasarkan Jarak
+            let pendapatan = 7000;
+            let jarakText = "0 km";
+            if(coordsPembelian && coordsTujuan) {
+                let km = hitungJarakKM(coordsPembelian.lat, coordsPembelian.lng, coordsTujuan.lat, coordsTujuan.lng);
+                jarakText = km.toFixed(2) + " km";
+                pendapatan = hitungTarif(km);
+            }
+
+            let potongan = pendapatan * 0.12;
+            let totalOrderanMasuk = jmlProduk + jmlTambah;
+
+            let dataBaru = {
+                id: Date.now(),
+                tanggal: new Date().toISOString(),
+                jasa,
+                namaProduk,
+                jmlProduk,
+                tambahProduk,
+                jmlTambah,
+                pembelian,
+                tujuan,
+                jarak: jarakText,
+                pendapatan,
+                potongan,
+                totalOrderan: totalOrderanMasuk
+            };
+
+            dbRiwayat.unshift(dataBaru);
+            localStorage.setItem('bd_riwayat', JSON.stringify(dbRiwayat));
+
+            // Kirim ke WhatsApp
+            let waText = `*BLUE DELIVERY ORDER*%0A` +
+                         `--------------------------------%0A` +
+                         `Jasa: ${jasa}%0A` +
+                         `Produk: ${namaProduk} (${jmlProduk}x)%0A` +
+                         `Tambahan: ${tambahProduk} (${jmlTambah}x)%0A` +
+                         `Lokasi Pembelian: ${pembelian}%0A` +
+                         `Lokasi Tujuan: ${tujuan}%0A` +
+                         `Estimasi Jarak: ${jarakText}%0A` +
+                         `Pendapatan: Rp ${pendapatan.toLocaleString('id-ID')}%0A` +
+                         `Kondisi: ${isHujan ? 'Hujan ' : ''}${isOjek ? 'Ojek' : ''}`;
+
+            window.open(`https://wa.me/?text=${waText}`, '_blank');
+            alert("Data berhasil disimpan dan diarahkan ke WhatsApp!");
             
-            <div class="section-label">&gt;&gt; Jenis Orderan</div>
-            <select id="jenisOrder" onchange="hitungOtomatis()">
-                <option value="7000">Makanan / Barang (Tarif Dasar Rp 7.000)</option>
-                <option value="ojek">Ojek / Ambil Barang Lunas</option>
-            </select>
-
-            <div id="boxJarakKM" style="display:none;">
-                <div class="section-label">&gt;&gt; Estimasi Jarak (Kilometer)</div>
-                <input type="number" id="jarakKm" value="2" min="1" oninput="hitungOtomatis()" placeholder="Cth: 3">
-            </div>
-
-            <div class="section-label">&gt;&gt; Produk</div>
-            <div id="containerProduk">
-                <div class="product-item-box">
-                    <input type="text" class="namaProduk" placeholder="Nama Produk / Jasa">
-                    <div class="row-2">
-                        <input type="number" class="hargaProduk" placeholder="Harga Cth. 5000" value="0" oninput="hitungOtomatis()">
-                        <input type="number" class="jumlahProduk" placeholder="Jumlah Produk" value="1" oninput="hitungOtomatis()">
-                    </div>
-                </div>
-            </div>
-            <button class="btn-add-product" type="button" onclick="tambahBarisProduk()">+ Tambah Produk Lain</button>
-
-            <div class="section-label">&gt;&gt; Lokasi Pembelian</div>
-            <div class="input-group-gps">
-                <input type="text" id="lokasiPembelian" placeholder="Cari lokasi..">
-                <button class="btn-gps" type="button" onclick="ambilLokasi('lokasiPembelian')">📍 GPS</button>
-            </div>
-
-            <div class="section-label">&gt;&gt; Lokasi Antar</div>
-            <div class="input-group-gps">
-                <input type="text" id="lokasiAntar" placeholder="Cari lokasi..">
-                <button class="btn-gps" type="button" onclick="ambilLokasi('lokasiAntar')">📍 GPS</button>
-            </div>
-
-            <div class="row-2">
-                <div style="flex:1;">
-                    <div class="section-label">&gt;&gt; Tambah T.Pembelian</div>
-                    <input type="number" id="tambahPembelian" value="0" min="0" oninput="hitungOtomatis()">
-                </div>
-                <div style="flex:1;">
-                    <div class="section-label">&gt;&gt; Cas Modal</div>
-                    <input type="number" id="casModal" value="0" min="0" oninput="hitungOtomatis()">
-                </div>
-            </div>
-
-            <div class="section-label">&gt;&gt; Total Order Produk</div>
-            <input type="number" id="totalOrderProduk" value="1" min="1" oninput="hitungOtomatis()">
-
-            <div class="row-2">
-                <div style="flex:1;">
-                    <div class="section-label">&gt; [+] Tambah T.Bersebelahan</div>
-                    <input type="number" id="tambahBersebelahan" value="0" min="0" oninput="hitungOtomatis()">
-                </div>
-                <div style="flex:1;">
-                    <div class="section-label">&gt; Pindah T.Kosong/Tutup</div>
-                    <input type="number" id="pindahTempat" value="0" min="0" oninput="hitungOtomatis()">
-                </div>
-            </div>
-
-            <div class="section-label">&gt;&gt; Ces ronjot (Opsional)</div>
-            <input type="number" id="cesRonjot" value="0" min="0" oninput="hitungOtomatis()">
-
-            <div class="section-label">&gt;&gt; Biaya Parkir (Opsional)</div>
-            <input type="number" id="biayaParkir" value="0" min="0" oninput="hitungOtomatis()">
-
-            <div class="checkbox-group">
-                <input type="checkbox" id="cesHujan" onchange="hitungOtomatis()">
-                <label for="cesHujan">Ces Hujan (+Rp, 3.000)</label>
-            </div>
-
-            <div class="checkbox-group">
-                <input type="checkbox" id="dorongMotor" onchange="hitungOtomatis()">
-                <label for="dorongMotor">Dorong Motor (+Rp, 10.000)</label>
-            </div>
-
-            <!-- KOTAK HASIL HITUNG OTOMATIS -->
-            <div class="auto-calc-box">
-                <div class="auto-calc-title">TOTAL BIAYA OTOMATIS</div>
-                <div class="auto-calc-value" id="labelTotalOtomatis">Rp. 0</div>
-            </div>
-
-            <button class="btn-primary-action" type="button" onclick="kirimOrderan()">Kirim Orderan Hari Ini</button>
-        </div>
-    </div>
-
-    <!-- TAB HISTORY -->
-    <div id="tab-history" class="tab-content">
-        <div class="top-header">History Transaksi</div>
-        <div class="content-padding">
-            <div class="card">
-                <div class="card-title">Riwayat Pengiriman Hari Ini</div>
-                <div id="listRiwayat" style="font-size: 13px; color: #666;">Belum ada riwayat transaksi.</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- TAB AKUN -->
-    <div id="tab-akun" class="tab-content">
-        <div class="top-header">Dashboard Rekap Kurir</div>
-        <div class="content-padding">
-            <div class="profile-card">
-                <div class="profile-name">Blue Delivery</div>
-                <div class="profile-info">ID Kurir: BD-001 | Status: Aktif 🟢</div>
-            </div>
-
-            <div class="grid-2" style="margin-bottom: 12px;">
-                <div class="mini-card">
-                    <div class="mini-label">Minggu Ini</div>
-                    <div class="val-blue" id="gridMingguIni">Rp. 0 (0x)</div>
-                </div>
-                <div class="mini-card">
-                    <div class="mini-label">Minggu Kemarin</div>
-                    <div class="val-blue" id="gridMingguKemarin">-</div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">Statistik Hari Ini</div>
-                <div class="stat-row">
-                    <span>Orderan</span>
-                    <span class="stat-val" id="statOrderan">0</span>
-                </div>
-                <div class="stat-row">
-                    <span>Pendapatan</span>
-                    <span class="stat-val" id="statPendapatan">Rp. 0</span>
-                </div>
-                <div class="stat-row">
-                    <span>Potongan Admin</span>
-                    <span class="stat-val" id="statPotonganAdmin">Rp. 0</span>
-                </div>
-            </div>
-
-            <div class="highlight-box">
-                <div class="highlight-title">Potongan Admin Minggu Ini</div>
-                <div class="highlight-value" id="totalPotonganMingguIni">
-                    Rp. 0 <span style="font-size: 14px; font-weight: normal; color: #555;">(0x)</span>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">Target Order Mingguan</div>
-                <div class="grid-2">
-                    <div class="mini-card">
-                        <div class="mini-label">Minggu Ini</div>
-                        <div id="targetMingguIni" class="target-red">0/35 Order</div>
-                    </div>
-                    <div class="mini-card">
-                        <div class="mini-label">Minggu Kemarin</div>
-                        <div class="target-red">0/35 Order</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- BOTTOM NAVIGATION -->
-    <div class="bottom-nav">
-        <button class="nav-item active" id="nav-home" type="button" onclick="switchTab('home')">
-            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-            Home
-        </button>
-        <button class="nav-item" id="nav-history" type="button" onclick="switchTab('history')">
-            <svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
-            History
-        </button>
-        <button class="nav-item" id="nav-akun" type="button" onclick="switchTab('akun')">
-            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            Akun
-        </button>
-    </div>
-</div>
-
-<script>
-    let riwayatTransaksi = JSON.parse(localStorage.getItem('bd_riwayat')) || [];
-
-    function switchTab(tabName) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        
-        let targetTab = document.getElementById('tab-' + tabName);
-        let targetNav = document.getElementById('nav-' + tabName);
-        
-        if (targetTab) targetTab.classList.add('active');
-        if (targetNav) targetNav.classList.add('active');
-        
-        window.scrollTo(0, 0);
-        if (tabName === 'akun' || tabName === 'history') {
-            muatDataAkun();
+            // Reset Form
+            document.getElementById('m-jasa').value = "";
+            document.getElementById('m-namaproduk').value = "";
+            inputPembelian.value = "";
+            inputTujuan.value = "";
+            document.getElementById('m-tambahproduk').value = "";
+            document.getElementById('m-jmltambah').value = "0";
+            coordsPembelian = null;
+            coordsTujuan = null;
+            if(markerPembelian) map.removeLayer(markerPembelian);
+            if(markerTujuan) map.removeLayer(markerTujuan);
         }
-    }
 
-    function ambilLokasi(elementId) {
-        let inputField = document.getElementById(elementId);
-        if(!inputField) return;
-        inputField.value = "Mencari lokasi...";
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    inputField.value = "Lokasi (" + position.coords.latitude.toFixed(4) + ", " + position.coords.longitude.toFixed(4) + ")";
-                },
-                function(error) {
-                    inputField.value = "Kec. Tikung, Lamongan";
-                },
-                { timeout: 7000, enableHighAccuracy: true }
-            );
-        } else {
-            inputField.value = "Kec. Tikung, Lamongan";
-        }
-    }
+        // --- UPDATE TAMPILAN AKUN & STATISTIK ---
+        function updateAkunView() {
+            let totalOrderan = 0;
+            let totalPendapatan = 0;
+            let totalPotongan = 0;
 
-    function tambahBarisProduk() {
-        let container = document.getElementById('containerProduk');
-        if(!container) return;
-        let div = document.createElement('div');
-        div.className = 'product-item-box';
-        div.innerHTML = `
-            <button type="button" class="btn-remove" onclick="this.parentElement.remove(); hitungOtomatis();">Hapus</button>
-            <input type="text" class="namaProduk" placeholder="Nama Produk Lain">
-            <div class="row-2">
-                <input type="number" class="hargaProduk" placeholder="Harga" value="0" oninput="hitungOtomatis()">
-                <input type="number" class="jumlahProduk" placeholder="Jumlah" value="1" oninput="hitungOtomatis()">
-            </div>
-        `;
-        container.appendChild(div);
-        hitungOtomatis();
-    }
+            let htmlRiwayat = "";
 
-    function hitungOtomatis() {
-        let jenisOrderEl = document.getElementById('jenisOrder');
-        let boxKM = document.getElementById('boxJarakKM');
-        if (!jenisOrderEl || !boxKM) return 0;
+            dbRiwayat.forEach(item => {
+                totalOrderan += item.totalOrderan;
+                totalPendapatan += item.pendapatan;
+                totalPotongan += item.potongan;
 
-        let jenisOrder = jenisOrderEl.value;
-        let tarifDasar = 0;
+                // Render List Riwayat
+                htmlRiwayat += `
+                    <div class="bg-white p-3 rounded-lg border shadow-sm text-xs space-y-1">
+                        <div class="flex justify-between font-bold text-gray-700">
+                            <span>${item.jasa} - ${item.namaProduk || 'Tanpa Nama'}</span>
+                            <span class="text-green-600">Rp ${item.pendapatan.toLocaleString('id-ID')}</span>
+                        </div>
+                        <p class="text-gray-500">Dari: ${item.pembelian}</p>
+                        <p class="text-gray-500">Tujuan: ${item.tujuan} (${item.jarak})</p>
+                        <p class="text-gray-400 text-[10px]">${new Date(item.tanggal).toLocaleString('id-ID')}</p>
+                    </div>
+                `;
+            });
 
-        if (jenisOrder === "ojek") {
-            boxKM.style.display = "block";
-            let jarakInput = document.getElementById('jarakKm');
-            let km = jarakInput ? (parseFloat(jarakInput.value) || 2) : 2;
-            if (km <= 2) {
-                tarifDa
+            if(dbRiwayat.length === 0) {
+                htmlRiwayat = `<p clas
