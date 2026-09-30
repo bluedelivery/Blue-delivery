@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e5e7eb; z-index: 50; }
-        #map-container { height: 250px; width: 100%; margin-top: 8px; border-radius: 8px; }
+        #map { height: 220px; width: 100%; border-radius: 8px; margin-top: 4px; z-index: 10; }
         .suggestions-box {
             border: 1px solid #d1d5db;
             max-height: 150px;
@@ -43,7 +43,7 @@
     <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg relative pb-16">
 
         <!-- ================= PAGE 1: MENU ================= -->
-        <div id="page-menu" style="display: block;" class="p-4">
+        <div id="page-menu" class="p-4">
             <!-- Brand -->
             <div class="bg-green-600 text-white text-center py-3 rounded-lg font-bold text-xl tracking-wider shadow">
                 BLUE DELIVERY
@@ -72,33 +72,33 @@
                         <label class="block text-sm font-medium text-gray-700">Jumlah</label>
                         <select id="m-jmlproduk" class="w-full mt-1 p-2 border rounded-lg bg-white">
                             <option value="1">1</option>
-                            <script>
-                                for(let i=2; i<=30; i++) document.write(`<option value="${i}">${i}</option>`);
-                            </script>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- Lokasi Pembelian (Bisa Diketik & Autocomplete) -->
+                <!-- Lokasi Pembelian -->
                 <div class="input-wrapper">
                     <label class="block text-sm font-medium text-gray-700">Lokasi Pembelian</label>
-                    <input type="text" id="m-lokasipembelian" placeholder="Ketik nama tempat atau alamat..." autocomplete="off" class="w-full mt-1 p-2 border rounded-lg bg-white">
+                    <input type="text" id="m-lokasipembelian" placeholder="Ketik lokasi pembelian..." autocomplete="off" class="w-full mt-1 p-2 border rounded-lg bg-white">
                     <div id="suggestions-pembelian" class="suggestions-box"></div>
                 </div>
 
-                <!-- Lokasi Tujuan (Bisa Diketik & Autocomplete) -->
+                <!-- Lokasi Tujuan -->
                 <div class="input-wrapper">
                     <label class="block text-sm font-medium text-gray-700">Lokasi Tujuan</label>
-                    <input type="text" id="m-lokasitujuan" placeholder="Ketik nama tempat atau alamat..." autocomplete="off" class="w-full mt-1 p-2 border rounded-lg bg-white">
+                    <input type="text" id="m-lokasitujuan" placeholder="Ketik lokasi tujuan..." autocomplete="off" class="w-full mt-1 p-2 border rounded-lg bg-white">
                     <div id="suggestions-tujuan" class="suggestions-box"></div>
                 </div>
 
                 <!-- Peta Interaktif -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Peta Lokasi</label>
-                    <div id="map-container">
-                        <div id="map" style="width: 100%; height: 100%; border-radius: 8px;"></div>
-                    </div>
+                    <label class="block text-sm font-medium text-gray-700">Peta Lokasi</label>
+                    <div id="map"></div>
                 </div>
 
                 <!-- Tambahkan Produk Tambahan -->
@@ -111,9 +111,10 @@
                         <label class="block text-sm font-medium text-gray-700">Jumlah</label>
                         <select id="m-jmltambah" class="w-full mt-1 p-2 border rounded-lg bg-white">
                             <option value="0">0</option>
-                            <script>
-                                for(let i=1; i<=30; i++) document.write(`<option value="${i}">${i}</option>`);
-                            </script>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="5">5</option>
                         </select>
                     </div>
                 </div>
@@ -138,7 +139,7 @@
         </div>
 
         <!-- ================= PAGE 2: RIWAYAT ================= -->
-        <div id="page-riwayat" style="display: none;" class="p-4">
+        <div id="page-riwayat" class="p-4" style="display: none;">
             <h2 class="text-xl font-bold text-gray-800 mb-2 border-b pb-2">Riwayat Order</h2>
             <div id="riwayat-list" class="space-y-3">
                 <p class="text-sm text-gray-400 text-center py-6">Belum ada riwayat tersimpan.</p>
@@ -146,7 +147,7 @@
         </div>
 
         <!-- ================= PAGE 3: AKUN ================= -->
-        <div id="page-akun" style="display: none;" class="p-4 space-y-4">
+        <div id="page-akun" class="p-4 space-y-4" style="display: none;">
             <div class="flex flex-col items-center bg-green-50 p-4 rounded-xl border border-green-200">
                 <div class="w-20 h-20 bg-green-600 text-white rounded-full flex items-center justify-center text-3xl font-bold shadow">👤</div>
                 <h3 class="mt-2 text-lg font-bold text-gray-800">Kurir Blue Delivery</h3>
@@ -215,26 +216,10 @@
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        function switchTab(tab) {
-            document.getElementById('page-menu').style.display = tab === 'menu' ? 'block' : 'none';
-            document.getElementById('page-riwayat').style.display = tab === 'riwayat' ? 'block' : 'none';
-            document.getElementById('page-akun').style.display = tab === 'akun' ? 'block' : 'none';
-
-            ['menu', 'riwayat', 'akun'].forEach(t => {
-                let btn = document.getElementById('nav-' + t);
-                if(t === tab) {
-                    btn.classList.remove('text-gray-400');
-                    btn.classList.add('text-green-600');
-                } else {
-                    btn.classList.remove('text-green-600');
-                    btn.classList.add('text-gray-400');
-                }
-            });
-            if(tab === 'akun' || tab === 'riwayat') updateAkunView();
-        }
-
         let dbRiwayat = JSON.parse(localStorage.getItem('bd_riwayat')) || [];
-        let map, markerPembelian, markerTujuan;
+        let map = null;
+        let markerPembelian = null;
+        let markerTujuan = null;
         let coordsPembelian = null;
         let coordsTujuan = null;
 
@@ -243,16 +228,35 @@
         const boxPembelian = document.getElementById('suggestions-pembelian');
         const boxTujuan = document.getElementById('suggestions-tujuan');
 
-        // Inisialisasi Peta
-        function initMap(lat=-6.200000, lng=106.816666) {
-            if(!map) {
-                map = L.map('map').setView([lat, lng], 13);
+        // Inisialisasi Peta saat pertama kali dibuka
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                map = L.map('map').setView([-6.200000, 106.816666], 13);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+            }, 300);
+        });
+
+        function switchTab(tab) {
+            document.getElementById('page-menu').style.display = (tab === 'menu') ? 'block' : 'none';
+            document.getElementById('page-riwayat').style.display = (tab === 'riwayat') ? 'block' : 'none';
+            document.getElementById('page-akun').style.display = (tab === 'akun') ? 'block' : 'none';
+
+            let navMenu = document.getElementById('nav-menu');
+            let navRiwayat = document.getElementById('nav-riwayat');
+            let navAkun = document.getElementById('nav-akun');
+
+            navMenu.className = "flex flex-col items-center font-semibold text-xs " + (tab === 'menu' ? "text-green-600" : "text-gray-400");
+            navRiwayat.className = "flex flex-col items-center font-semibold text-xs " + (tab === 'riwayat' ? "text-green-600" : "text-gray-400");
+            navAkun.className = "flex flex-col items-center font-semibold text-xs " + (tab === 'akun' ? "text-green-600" : "text-gray-400");
+
+            if (tab === 'menu' && map) {
+                setTimeout(function() { map.invalidateSize(); }, 100);
+            }
+            if (tab === 'riwayat' || tab === 'akun') {
+                updateAkunView();
             }
         }
-        initMap();
 
-        // Autocomplete Pencarian Lokasi
         function setupAutocomplete(inputEl, boxEl, isPembelian) {
             let timeoutId;
             inputEl.addEventListener('input', function() {
@@ -321,8 +325,6 @@
             let jmlTambah = parseInt(document.getElementById('m-jmltambah').value) || 0;
             let pembelian = inputPembelian.value;
             let tujuan = inputTujuan.value;
-            let isHujan = document.getElementById('chk-hujan').checked;
-            let isOjek = document.getElementById('chk-ojek').checked;
 
             if(!jasa || !pembelian || !tujuan) {
                 alert("Mohon lengkapi jenis jasa serta lokasi pembelian dan tujuan!");
@@ -376,10 +378,10 @@
                 </div>`;
             });
             if(dbRiwayat.length === 0) htmlRiwayat = `<p class="text-sm text-gray-400 text-center py-6">Belum ada riwayat tersimpan.</p>`;
-            document.getElementById('riwayat-list').innerHTML = htmlRiwayat;
-            document.getElementById('stat-orderan').innerText = totalOrderan;
-            document.getElementById('stat-pendapatan').innerText = `Rp ${totalPendapatan.toLocaleString('id-ID')}`;
-            document.getElementById('stat-potongan').innerText = `Rp ${totalPotongan.toLocaleString('id-ID')}`;
-            document.getElementById('mingguan-total').innerText = `Rp ${totalPotongan.toLocaleString('id-ID')}`;
+            
+            let riwayatListEl = document.getElementById('riwayat-list');
+            if(riwayatListEl) riwayatListEl.innerHTML = htmlRiwayat;
 
-            let targetW1 =
+            let statOrderan = document.getElementById('stat-orderan');
+            let statPendapatan = document.getElementById('stat-pendapatan');
+            let statPotongan = document.getElement
